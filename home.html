@@ -27,6 +27,14 @@
             background: #2563eb; color: white; border-color: #2563eb; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
         }
 
+        /* Nút Admin đặc biệt */
+        #adminNavBtn {
+            background: #dc2626; color: white; border-color: #dc2626; display: none;
+        }
+        #adminNavBtn:hover {
+            background: #b91c1c; box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25);
+        }
+
         .main-container { max-width: 1300px; margin: 0 auto; padding: 0 40px; }
 
         /* Banner Chào mừng */
@@ -105,16 +113,20 @@
             <a href="home.html" class="nav-btn active"><i class="fa-solid fa-house"></i> Trang chủ</a>
             <a href="luyende.html" class="nav-btn"><i class="fa-solid fa-pen-to-square"></i> Luyện đề</a>
             <a href="gochoctap.html" class="nav-btn"><i class="fa-solid fa-pen-to-square"></i> Góc học tập</a>
+            
+            <!-- Nút Admin mặc định bị ẩn -->
+            <a href="admin.html" id="adminNavBtn" class="nav-btn"><i class="fa-solid fa-user-shield"></i> Quản Lý Admin</a>
+
             <!-- Menu Hồ sơ cá nhân -->
             <div class="user-profile-menu-container" style="position: relative;">
                 <div class="profile-toggle-btn" onclick="toggleProfileDropdown()" style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 4px 8px; border-radius: 30px; transition: 0.2s;" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='transparent'">
-                    <div id="nav-avatar-char" style="width: 38px; height: 38px; background: #2563eb; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 15px; box-shadow: 0 2px 8px rgba(37,99,235,0.2);">U</div>
+                    <div id="nav-avatar-char" style="width: 38px; height: 38px; background: #2563eb; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 15px; box-shadow: 0 2px 8px rgba(37,99,235,0.2);">?</div>
                     <i class="fa-solid fa-chevron-down" style="font-size: 11px; color: #64748b;"></i>
                 </div>
                 
                 <div id="profileDropdown" style="display: none; position: absolute; right: 0; top: 50px; width: 280px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; box-shadow: 0 15px 35px rgba(0,0,0,0.08); overflow: hidden; z-index: 1000;">
                     <div style="padding: 18px 20px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; gap: 12px;">
-                        <div id="dropdown-avatar-char" style="width: 44px; height: 44px; background: #2563eb; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 18px; flex-shrink: 0;">U</div>
+                        <div id="dropdown-avatar-char" style="width: 44px; height: 44px; background: #2563eb; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 18px; flex-shrink: 0;">?</div>
                         <div style="overflow: hidden;">
                             <div id="dropdown-name" style="font-weight: 700; font-size: 15px; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Đang tải...</div>
                             <div id="dropdown-email" style="font-size: 12px; color: #64748b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">...</div>
@@ -135,7 +147,7 @@
         <!-- Banner chào mừng -->
         <div class="welcome-banner">
             <div>
-                <h1 id="welcome-user-name">Chào mừng trở lại! 👋</h1>
+                <h1 id="welcome-user-name">Đang tải dữ liệu...</h1>
                 <p>Tiếp tục hành trình chinh phục kỳ thi tốt nghiệp THPT Quốc gia với kho tài liệu và đề thi tối ưu.</p>
             </div>
             <div class="user-badge">
@@ -195,42 +207,39 @@
         </div>
     </div>
 
-    <script>
-        window.addEventListener('DOMContentLoaded', () => {
-            const userName = localStorage.getItem('userFullName') || localStorage.getItem('userName');
-            const userEmail = localStorage.getItem('userEmail') || localStorage.getItem('userGmail') || 'user@gmail.com';
-            const userAvatar = localStorage.getItem('userAvatar');
+    <!-- TÍCH HỢP FIREBASE THAY THẾ CHO LOCALSTORAGE CŨ -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-            if (!userName) {
-                window.location.href = 'auth.html';
-                return;
-            }
+        // Cấu hình Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyCVKSe-pZ2uK4ZwqtlnqBUUiENfpbZ7XDc",
+            authDomain: "he-thong-on-thi-2e91e.firebaseapp.com",
+            projectId: "he-thong-on-thi-2e91e",
+            storageBucket: "he-thong-on-thi-2e91e.appspot.com",
+            messagingSenderId: "1055562858590",
+            appId: "1:1055562858590:web:d235ea83c27da259a4192b"
+        };
 
-            const firstChar = userName.trim().charAt(0).toUpperCase();
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
 
-            document.getElementById('welcome-user-name').innerText = `Chào mừng trở lại, ${userName}! 👋`;
-            document.getElementById('dropdown-name').innerText = userName;
-            document.getElementById('dropdown-email').innerText = userEmail;
-
-            const avatarElements = [
-                document.getElementById('nav-avatar-char'),
-                document.getElementById('dropdown-avatar-char')
-            ];
-
-            avatarElements.forEach(el => {
-                if (el) {
-                    if (userAvatar) {
-                        el.innerHTML = `<img src="${userAvatar}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">`;
-                    } else {
-                        el.innerText = firstChar;
-                    }
-                }
-            });
-        });
-
-        function toggleProfileDropdown() {
+        // Gắn các hàm UI vào window để có thể gọi từ HTML khi dùng type="module"
+        window.toggleProfileDropdown = function() {
             const dropdown = document.getElementById('profileDropdown');
             dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        }
+
+        window.openLogoutModal = function() {
+            document.getElementById('profileDropdown').style.display = 'none';
+            document.getElementById('logoutModal').style.display = 'flex';
+        }
+
+        window.closeLogoutModal = function() {
+            document.getElementById('logoutModal').style.display = 'none';
         }
 
         window.addEventListener('click', function(e) {
@@ -241,29 +250,81 @@
             }
         });
 
-        // Mở Modal xác nhận đăng xuất trên giao diện
-        function openLogoutModal() {
-            document.getElementById('profileDropdown').style.display = 'none';
-            document.getElementById('logoutModal').style.display = 'flex';
-        }
+        // HÀM QUAN TRỌNG: Lắng nghe trạng thái đăng nhập thực tế từ Firebase
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                // NGƯỜI DÙNG ĐÃ ĐĂNG NHẬP HỢP LỆ
+                const userEmail = user.email || 'user@gmail.com';
+                let userName = user.displayName;
 
-        // Đóng Modal
-        function closeLogoutModal() {
-            document.getElementById('logoutModal').style.display = 'none';
-        }
+                // Nếu người dùng đăng ký bằng Email/Mật khẩu thì mặc định Google không có displayName
+                // Chúng ta sẽ truy xuất Firestore để lấy "fullname" mà chúng ta đã lưu lúc Đăng Ký
+                if (!userName) {
+                    try {
+                        const docRef = doc(db, "users", user.uid);
+                        const docSnap = await getDoc(docRef);
+                        if (docSnap.exists()) {
+                            userName = docSnap.data().fullname;
+                        }
+                    } catch (error) {
+                        console.error("Lỗi lấy thông tin Firestore:", error);
+                    }
+                }
+                
+                // Phòng hờ nếu vẫn không có tên, lấy chữ cái đầu của email
+                if (!userName) {
+                    userName = userEmail.split('@')[0];
+                }
 
-        // Thực hiện đăng xuất thực sự
-        function confirmLogout() {
-            localStorage.removeItem('userFullName');
-            localStorage.removeItem('userName');
-            localStorage.removeItem('userEmail');
-            localStorage.removeItem('userGmail');
-            localStorage.removeItem('userAvatar');
-            localStorage.removeItem('userPhone');
-            localStorage.removeItem('userFb');
-            localStorage.removeItem('activeExamId');
-            
-            window.location.href = 'auth.html';
+                // XỬ LÝ ẨN HIỆN NÚT ADMIN BẰNG EMAIL TỪ FIREBASE
+                if (userEmail === 'nguyenbaongocc271009@gmail.com') {
+                    document.getElementById('adminNavBtn').style.display = 'flex';
+                } else {
+                    document.getElementById('adminNavBtn').style.display = 'none';
+                }
+
+                // Đổ dữ liệu lên giao diện
+                const firstChar = userName.trim().charAt(0).toUpperCase();
+                document.getElementById('welcome-user-name').innerText = `Chào mừng trở lại, ${userName}! 👋`;
+                document.getElementById('dropdown-name').innerText = userName;
+                document.getElementById('dropdown-email').innerText = userEmail;
+
+                // Xử lý ảnh đại diện (nếu đăng nhập Google sẽ có ảnh)
+                const avatarElements = [
+                    document.getElementById('nav-avatar-char'),
+                    document.getElementById('dropdown-avatar-char')
+                ];
+                const userAvatar = user.photoURL; 
+
+                avatarElements.forEach(el => {
+                    if (el) {
+                        if (userAvatar) {
+                            el.innerHTML = `<img src="${userAvatar}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">`;
+                        } else {
+                            el.innerText = firstChar;
+                        }
+                    }
+                });
+
+                // Lưu lại email tạm cho admin.html chạy mượt
+                localStorage.setItem('userEmail', userEmail);
+                
+            } else {
+                // NẾU CHƯA ĐĂNG NHẬP, ĐÁ VĂNG VỀ TRANG AUTH (Bảo mật tuyệt đối)
+                window.location.href = 'auth.html';
+            }
+        });
+
+        // Xử lý Đăng Xuất an toàn bằng Firebase
+        window.confirmLogout = function() {
+            signOut(auth).then(() => {
+                // Xóa sạch bộ nhớ phụ
+                localStorage.clear();
+                sessionStorage.clear();
+                // Firebase tự động ngắt kết nối và onAuthStateChanged ở trên sẽ đá người dùng về auth.html
+            }).catch((error) => {
+                alert("Lỗi đăng xuất: " + error.message);
+            });
         }
     </script>
 </body>

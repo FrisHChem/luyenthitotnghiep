@@ -13,32 +13,115 @@
         .auth-card {
             background: #ffffff; border: 1px solid #e2e8f0; border-radius: 24px; padding: 35px 40px;
             width: 100%; max-width: 450px; box-shadow: 0 20px 40px rgba(0,0,0,0.05); position: relative;
+            margin-top: 60px;
         }
-        .brand-icon {
-            width: 55px; height: 55px; background: rgba(37,99,235,0.1); color: #2563eb;
-            border-radius: 16px; display: flex; align-items: center; justify-content: center;
-            font-size: 26px; margin: 0 auto 15px;
+        
+        /* --- HIỆU ỨNG BÉ SHIBA INU --- */
+        .mascot-container {
+            position: absolute; top: -85px; left: 50%; transform: translateX(-50%);
+            width: 140px; height: 110px; z-index: 10;
         }
-        .auth-title { font-size: 22px; font-weight: 800; color: #0f172a; text-align: center; margin-bottom: 6px; }
+        .shiba-ear {
+            width: 34px; height: 42px; background: #fb923c; border: 3px solid #0f172a;
+            position: absolute; top: 8px; z-index: 1; transition: 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            overflow: hidden;
+        }
+        .shiba-ear::after { 
+            content: ''; position: absolute; bottom: 0; width: 18px; height: 26px; background: #fbcfe8;
+        }
+        .shiba-ear.left { left: 16px; border-radius: 12px 35px 0 0; transform: rotate(-18deg); }
+        .shiba-ear.left::after { right: 4px; border-radius: 12px 35px 0 0; }
+        .shiba-ear.right { right: 16px; border-radius: 35px 12px 0 0; transform: rotate(18deg); }
+        .shiba-ear.right::after { left: 4px; border-radius: 35px 12px 0 0; }
+
+        .shiba-face {
+            width: 114px; height: 96px; background: #fb923c; border-radius: 50% 50% 45% 45%;
+            position: relative; margin: 20px auto 0; border: 3px solid #0f172a;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.08); overflow: hidden; z-index: 2;
+        }
+        
+        .shiba-brow {
+            position: absolute; top: 12px; width: 14px; height: 10px; background: #ffffff; border-radius: 50%; z-index: 3;
+        }
+        .shiba-brow.left { left: 24px; transform: rotate(-15deg); }
+        .shiba-brow.right { right: 24px; transform: rotate(15deg); }
+
+        .shiba-mask-l, .shiba-mask-r {
+            position: absolute; top: 32px; width: 46px; height: 50px; background: #ffffff; border-radius: 50%;
+        }
+        .shiba-mask-l { left: 8px; }
+        .shiba-mask-r { right: 8px; }
+        .shiba-mask-b {
+            position: absolute; bottom: 0; left: 0; width: 100%; height: 45px; background: #ffffff;
+        }
+
+        .eye {
+            width: 12px; height: 14px; background: #0f172a; border-radius: 50%;
+            position: absolute; top: 42px; transition: 0.3s ease; z-index: 3;
+        }
+        .eye.left { left: 28px; } .eye.right { right: 28px; }
+        .eye::after { 
+            content: ''; position: absolute; top: 2px; right: 2px; width: 4px; height: 4px; background: #ffffff; border-radius: 50%;
+        }
+
+        .blush {
+            width: 16px; height: 8px; background: #fecdd3; border-radius: 50%;
+            position: absolute; top: 52px; opacity: 0.8; z-index: 2;
+        }
+        .blush.left { left: 14px; } .blush.right { right: 14px; }
+
+        .nose {
+            width: 14px; height: 9px; background: #0f172a; border-radius: 8px 8px 12px 12px;
+            position: absolute; top: 56px; left: 50%; transform: translateX(-50%); z-index: 3;
+        }
+        .mouth-line {
+            width: 2px; height: 7px; background: #0f172a; position: absolute; top: 64px; left: 50%; transform: translateX(-50%); z-index: 3;
+        }
+        .mouth-curve {
+            width: 24px; height: 10px; border-bottom: 2px solid #0f172a; border-radius: 50%;
+            position: absolute; top: 66px; left: 50%; transform: translateX(-50%); z-index: 3;
+        }
+
+        .hands {
+            position: absolute; top: 68px; width: 100%; height: 100%; pointer-events: none; z-index: 4;
+        }
+        .hand {
+            width: 32px; height: 40px; background: #ffffff; border: 3px solid #0f172a; border-radius: 16px;
+            position: absolute; transition: all 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+        }
+        .hand.left { left: 16px; transform: rotate(-25deg); }
+        .hand.right { right: 16px; transform: rotate(25deg); }
+        
+        .mascot-container.cover .hand.left { top: -20px; left: 24px; transform: rotate(15deg); }
+        .mascot-container.cover .hand.right { top: -20px; right: 24px; transform: rotate(-15deg); }
+        .mascot-container.cover .eye { height: 4px; border-radius: 10px; top: 47px; } 
+        .mascot-container.cover .eye::after { display: none; } 
+        .mascot-container.cover .shiba-ear.left { transform: rotate(-35deg) translateY(4px); } 
+        .mascot-container.cover .shiba-ear.right { transform: rotate(35deg) translateY(4px); }
+
+        .auth-title { font-size: 22px; font-weight: 800; color: #0f172a; text-align: center; margin-bottom: 6px; margin-top: 15px; }
         .auth-desc { font-size: 13px; color: #64748b; text-align: center; margin-bottom: 24px; line-height: 1.5; }
 
-        /* Tab chuyển đổi */
-        .auth-tabs {
-            display: flex; background: #f1f5f9; border-radius: 12px; padding: 4px; margin-bottom: 24px;
-        }
+        .auth-tabs { display: flex; background: #f1f5f9; border-radius: 12px; padding: 4px; margin-bottom: 24px; }
         .tab-btn {
             flex: 1; text-align: center; padding: 10px; font-size: 14px; font-weight: 600; color: #64748b;
             cursor: pointer; border-radius: 10px; transition: 0.2s; border: none; background: transparent;
         }
         .tab-btn.active { background: #ffffff; color: #2563eb; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
 
-        .form-group { margin-bottom: 16px; }
+        .form-group { margin-bottom: 16px; position: relative; }
         .form-label { display: block; font-weight: 600; font-size: 13px; color: #334155; margin-bottom: 6px; }
         .form-control {
             width: 100%; padding: 12px 16px; border: 1px solid #cbd5e1; border-radius: 10px;
             font-size: 14px; color: #0f172a; outline: none; transition: 0.2s; background: #fff;
         }
         .form-control:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+        
+        .eye-toggle {
+            position: absolute; right: 14px; top: 35px; color: #94a3b8;
+            cursor: pointer; font-size: 16px; transition: 0.2s; padding: 4px;
+        }
+        .eye-toggle:hover { color: #2563eb; }
 
         .btn-action {
             width: 100%; background: #2563eb; color: white; border: none; padding: 14px;
@@ -47,183 +130,386 @@
             display: flex; align-items: center; justify-content: center; gap: 8px;
         }
         .btn-action:hover { background: #1d4ed8; }
+        .btn-action:disabled { background: #94a3b8; cursor: not-allowed; box-shadow: none; }
+        .btn-action.success-state { background: #10b981 !important; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); }
+
+        .btn-google {
+            width: 100%; background: #ffffff; color: #334155; border: 1px solid #cbd5e1; padding: 12px;
+            border-radius: 12px; font-weight: 600; font-size: 14px; cursor: pointer;
+            transition: 0.2s; margin-top: 12px; display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        .btn-google:hover { background: #f8fafc; border-color: #94a3b8; }
 
         .form-container { display: none; }
         .form-container.active { display: block; }
-
-        /* Giao diện thông báo tùy chỉnh trên UI (Toast) */
-        #custom-toast {
-            position: absolute; top: -60px; left: 50%; transform: translateX(-50%);
-            background: #0f172a; color: white; padding: 12px 20px; border-radius: 12px;
-            font-size: 13px; font-weight: 600; box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-            display: flex; align-items: center; gap: 10px; opacity: 0; pointer-events: none; transition: 0.3s ease; z-index: 100;
-            white-space: nowrap;
+        
+        #loading-overlay {
+            display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 255, 255, 0.9); border-radius: 24px; 
+            align-items: center; justify-content: center; flex-direction: column; z-index: 100;
         }
-        #custom-toast.show { top: -50px; opacity: 1; pointer-events: auto; }
-        #custom-toast.success { background: #10b981; }
-        #custom-toast.error { background: #ef4444; }
+        #loading-overlay.active { display: flex; }
+        .spinner {
+            width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top: 4px solid #2563eb;
+            border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 15px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* KHUNG THÔNG BÁO CUSTOM */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(4px);
+            display: none; align-items: center; justify-content: center; z-index: 2000;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-box {
+            background: #ffffff; border-radius: 20px; padding: 30px; width: 100%; max-width: 360px;
+            text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.1); animation: scaleUp 0.2s ease;
+        }
+        @keyframes scaleUp { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .modal-icon {
+            width: 55px; height: 55px; background: #eff6ff; color: #2563eb; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; font-size: 24px; margin: 0 auto 15px;
+        }
+        .modal-icon.error { background: #fef2f2; color: #ef4444; }
+        .modal-title { font-size: 18px; font-weight: 800; color: #0f172a; margin-bottom: 8px; }
+        .modal-desc { font-size: 14px; color: #64748b; margin-bottom: 24px; line-height: 1.5; }
+        .modal-btn {
+            width: 100%; padding: 12px; border-radius: 12px; font-weight: 700; font-size: 14px; 
+            cursor: pointer; border: none; transition: 0.2s; background: #2563eb; color: white;
+        }
+        .modal-btn:hover { background: #1d4ed8; }
+        .modal-btn.error-btn { background: #ef4444; }
+        .modal-btn.error-btn:hover { background: #dc2626; }
     </style>
 </head>
 <body>
 
     <div class="auth-card">
-        <!-- Toast thông báo trên giao diện -->
-        <div id="custom-toast"><i id="toast-icon" class="fa-solid fa-circle-check"></i> <span id="toast-msg">Thông báo</span></div>
+        
+        <!-- BÉ SHIBA MASCOT -->
+        <div class="mascot-container" id="mascot">
+            <div class="shiba-ear left"></div>
+            <div class="shiba-ear right"></div>
+            
+            <div class="shiba-face">
+                <div class="shiba-brow left"></div>
+                <div class="shiba-brow right"></div>
+                
+                <div class="shiba-mask-l"></div>
+                <div class="shiba-mask-r"></div>
+                <div class="shiba-mask-b"></div>
+                
+                <div class="blush left"></div>
+                <div class="blush right"></div>
 
-        <div class="brand-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+                <div class="eye left"></div>
+                <div class="eye right"></div>
+                
+                <div class="nose"></div>
+                <div class="mouth-line"></div>
+                <div class="mouth-curve"></div>
+            </div>
+
+            <div class="hands">
+                <div class="hand left"></div>
+                <div class="hand right"></div>
+            </div>
+        </div>
+
+        <div id="loading-overlay">
+            <div class="spinner"></div>
+            <div style="font-weight: 600; color: #0f172a;">Đang xử lý dữ liệu...</div>
+        </div>
+
         <div class="auth-title">Hệ Thống Ôn Thi THPT Quốc Gia</div>
         <div class="auth-desc" id="authDesc">Đăng nhập hoặc tạo tài khoản mới để tiếp tục hành trình ôn tập.</div>
         
-        <!-- Các nút Tab chuyển đổi -->
         <div class="auth-tabs">
             <button class="tab-btn active" onclick="switchTab('login')" id="loginTabBtn">Đăng Nhập</button>
             <button class="tab-btn" onclick="switchTab('register')" id="regTabBtn">Đăng Ký</button>
         </div>
 
-        <!-- Form Đăng Nhập -->
+        <!-- FORM ĐĂNG NHẬP -->
         <div id="loginFormContainer" class="form-container active">
-            <form onsubmit="handleLogin(event)">
+            <form id="login-form">
                 <div class="form-group">
-                    <label class="form-label">Tên đăng nhập hoặc Email</label>
-                    <input type="text" id="loginIdentifier" class="form-control" placeholder="Nhập tên đăng nhập..." required>
+                    <label class="form-label">Email đăng nhập</label>
+                    <input type="email" id="login-email" class="form-control" placeholder="Nhập email..." required>
                 </div>
-
                 <div class="form-group">
                     <label class="form-label">Mật khẩu</label>
-                    <input type="password" id="loginPassword" class="form-control" placeholder="Nhập mật khẩu..." required>
+                    <input type="password" id="login-password" class="form-control" placeholder="Nhập mật khẩu..." required>
+                    <i class="fa-solid fa-eye eye-toggle" onclick="togglePassword('login-password', this)"></i>
                 </div>
-
-                <button type="submit" class="btn-action">
+                <button type="submit" id="btn-login" class="btn-action">
                     <i class="fa-solid fa-right-to-bracket"></i> Đăng Nhập
+                </button>
+                <button type="button" class="btn-google" id="btn-google-login">
+                    <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.13 0-5.78-2.11-6.73-4.96H1.14v3.14C3.15 21.3 7.23 24 12 24z"/><path fill="#FBBC05" d="M5.27 14.24c-.25-.72-.38-1.49-.38-2.24s.13-1.52.38-2.24V6.62H1.14C.41 8.09 0 9.77 0 12s.41 3.91 1.14 5.38l4.13-3.14z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.23 0 3.15 2.7 1.14 6.62l4.13 3.14c.95-2.85 3.6-4.96 6.73-4.96z"/></svg>
+                    Đăng nhập bằng Google
                 </button>
             </form>
         </div>
 
-        <!-- Form Đăng Ký -->
+        <!-- FORM ĐĂNG KÝ -->
         <div id="registerFormContainer" class="form-container">
-            <form onsubmit="handleRegister(event)">
-                <div class="form-group">
-                    <label class="form-label">Tên đăng nhập</label>
-                    <input type="text" id="regUserName" class="form-control" placeholder="Ví dụ: baongoc27" required>
-                </div>
-
+            <form id="register-form">
                 <div class="form-group">
                     <label class="form-label">Họ và tên</label>
-                    <input type="text" id="regFullName" class="form-control" placeholder="Ví dụ: Nguyễn Bảo Ngọc" required>
+                    <input type="text" id="register-fullname" class="form-control" placeholder="Ví dụ: Nguyễn Văn A" required>
                 </div>
-
                 <div class="form-group">
                     <label class="form-label">Email</label>
-                    <input type="email" id="regEmail" class="form-control" placeholder="Ví dụ: email@gmail.com" required>
+                    <input type="email" id="register-email" class="form-control" placeholder="Ví dụ: email@gmail.com" required>
                 </div>
-
+                
                 <div class="form-group">
                     <label class="form-label">Mật khẩu</label>
-                    <input type="password" id="regPassword" class="form-control" placeholder="Ít nhất 6 ký tự" required>
+                    <input type="password" id="register-password" class="form-control" placeholder="Ít nhất 6 ký tự" required minlength="6">
+                    <i class="fa-solid fa-eye eye-toggle" onclick="togglePassword('register-password', this)"></i>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Xác nhận mật khẩu</label>
+                    <input type="password" id="register-confirm-password" class="form-control" placeholder="Nhập lại mật khẩu..." required minlength="6">
+                    <i class="fa-solid fa-eye eye-toggle" onclick="togglePassword('register-confirm-password', this)"></i>
                 </div>
 
-                <button type="submit" class="btn-action">
+                <button type="submit" id="btn-register" class="btn-action">
                     <i class="fa-solid fa-user-plus"></i> Tạo Tài Khoản
+                </button>
+                <button type="button" class="btn-google" id="btn-google-reg">
+                    <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.13 0-5.78-2.11-6.73-4.96H1.14v3.14C3.15 21.3 7.23 24 12 24z"/><path fill="#FBBC05" d="M5.27 14.24c-.25-.72-.38-1.49-.38-2.24s.13-1.52.38-2.24V6.62H1.14C.41 8.09 0 9.77 0 12s.41 3.91 1.14 5.38l4.13-3.14z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.23 0 3.15 2.7 1.14 6.62l4.13 3.14c.95-2.85 3.6-4.96 6.73-4.96z"/></svg>
+                    Đăng ký bằng Google
                 </button>
             </form>
         </div>
     </div>
 
-    <script>
-        // Hàm hiển thị thông báo đẹp mắt trên giao diện thay cho alert()
-        function showToast(message, type = 'success') {
-            const toast = document.getElementById('custom-toast');
-            const msgSpan = document.getElementById('toast-msg');
-            const icon = document.getElementById('toast-icon');
+    <!-- KHUNG THÔNG BÁO CUSTOM -->
+    <div id="customAlert" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-icon" id="alertIcon"><i class="fa-solid fa-bell"></i></div>
+            <div class="modal-title" id="alertTitle">Thông báo</div>
+            <div class="modal-desc" id="alertMessage">Nội dung thông báo</div>
+            <div class="modal-actions">
+                <button class="modal-btn" id="alertBtn" onclick="closeAlert()">Đã hiểu</button>
+            </div>
+        </div>
+    </div>
 
-            toast.className = `show ${type}`;
-            msgSpan.innerText = message;
-            icon.className = type === 'success' ? 'fa-solid fa-circle-check' : 'fa-solid fa-circle-exclamation';
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-            setTimeout(() => {
-                toast.className = '';
-            }, 3000);
+        const firebaseConfig = {
+            apiKey: "AIzaSyCVKSe-pZ2uK4ZwqtlnqBUUiENfpbZ7XDc",
+            authDomain: "he-thong-on-thi-2e91e.firebaseapp.com",
+            projectId: "he-thong-on-thi-2e91e",
+            storageBucket: "he-thong-on-thi-2e91e.appspot.com",
+            messagingSenderId: "1055562858590",
+            appId: "1:1055562858590:web:d235ea83c27da259a4192b"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const googleProvider = new GoogleAuthProvider();
+
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+        const btnLogin = document.getElementById('btn-login');
+        const btnRegister = document.getElementById('btn-register');
+        const loadingOverlay = document.getElementById('loading-overlay');
+        const mascot = document.getElementById('mascot');
+
+        window.showAlert = function(message, type = 'error') {
+            const modal = document.getElementById('customAlert');
+            const icon = document.getElementById('alertIcon');
+            const title = document.getElementById('alertTitle');
+            const btn = document.getElementById('alertBtn');
+            
+            document.getElementById('alertMessage').innerText = message;
+            
+            if (type === 'error') {
+                icon.className = 'modal-icon error';
+                icon.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>';
+                title.innerText = 'Có lỗi xảy ra!';
+                title.style.color = '#ef4444';
+                btn.className = 'modal-btn error-btn';
+            } else {
+                icon.className = 'modal-icon';
+                icon.innerHTML = '<i class="fa-solid fa-check"></i>';
+                title.innerText = 'Thành công!';
+                title.style.color = '#2563eb';
+                btn.className = 'modal-btn';
+            }
+            
+            modal.classList.add('active');
         }
 
-        function switchTab(tab) {
-            const loginTab = document.getElementById('loginTabBtn');
-            const regTab = document.getElementById('regTabBtn');
-            const loginForm = document.getElementById('loginFormContainer');
-            const regForm = document.getElementById('registerFormContainer');
-            const desc = document.getElementById('authDesc');
+        window.closeAlert = function() {
+            document.getElementById('customAlert').classList.remove('active');
+        }
 
-            if (tab === 'login') {
-                loginTab.classList.add('active');
-                regTab.classList.remove('active');
-                loginForm.classList.add('active');
-                regForm.classList.remove('active');
-                desc.innerText = "Đăng nhập để tiếp tục ôn tập và luyện đề THPT Quốc gia.";
+        window.switchTab = function(tab) {
+            document.getElementById('loginTabBtn').classList.toggle('active', tab === 'login');
+            document.getElementById('regTabBtn').classList.toggle('active', tab === 'register');
+            document.getElementById('loginFormContainer').classList.toggle('active', tab === 'login');
+            document.getElementById('registerFormContainer').classList.toggle('active', tab === 'register');
+            document.getElementById('authDesc').innerText = tab === 'login' ? 
+                "Đăng nhập hoặc tạo tài khoản mới để tiếp tục hành trình ôn tập." : 
+                "Tạo tài khoản mới để bắt đầu hành trình ôn thi thông minh.";
+        }
+
+        window.togglePassword = function(inputId, iconElement) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') {
+                input.type = 'text'; 
+                iconElement.classList.remove('fa-eye');
+                iconElement.classList.add('fa-eye-slash');
+                mascot.classList.add('cover');
             } else {
-                regTab.classList.add('active');
-                loginTab.classList.remove('active');
-                regForm.classList.add('active');
-                loginForm.classList.remove('active');
-                desc.innerText = "Tạo tài khoản mới để bắt đầu hành trình ôn thi thông minh.";
+                input.type = 'password'; 
+                iconElement.classList.remove('fa-eye-slash');
+                iconElement.classList.add('fa-eye');
+                mascot.classList.remove('cover');
             }
         }
 
-        function handleLogin(e) {
-            e.preventDefault();
-            const identifier = document.getElementById('loginIdentifier').value.trim();
-            const password = document.getElementById('loginPassword').value;
+        function redirectToHome(buttonElement, successText) {
+            if (buttonElement) {
+                buttonElement.disabled = true;
+                buttonElement.className = "btn-action success-state";
+                buttonElement.innerHTML = `<i class="fa-solid fa-check"></i> ${successText}`;
+            }
+            setTimeout(() => {
+                window.location.href = "./home.html";
+            }, 500);
+        }
 
-            const savedUserName = localStorage.getItem('userName');
-            const savedEmail = localStorage.getItem('userEmail');
-            const savedPassword = localStorage.getItem('userPassword');
+        // HÀM XỬ LÝ GOOGLE AUTH QUA POPUP (BẮT LỖI TRỰC TIẾP)
+        async function handleGoogleLogin(buttonElement) {
+            buttonElement.disabled = true;
+            const originalHTML = buttonElement.innerHTML;
+            buttonElement.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang kết nối Google...';
 
-            if (!savedUserName && !savedEmail) {
-                localStorage.setItem('userName', identifier);
-                localStorage.setItem('userFullName', identifier);
-                localStorage.setItem('userEmail', identifier.includes('@') ? identifier : identifier + '@gmail.com');
-                localStorage.setItem('userPassword', password);
+            try {
+                const result = await signInWithPopup(auth, googleProvider);
+                const user = result.user;
+
+                // Lưu thông tin vào Firestore
+                try {
+                    await setDoc(doc(db, "users", user.uid), {
+                        uid: user.uid,
+                        fullname: user.displayName || "Học sinh mới",
+                        email: user.email,
+                        role: "student",
+                    }, { merge: true });
+                } catch (e) {
+                    console.error("Firestore error:", e);
+                }
+
+                localStorage.setItem('userName', user.displayName || user.email.split('@')[0]);
+                localStorage.setItem('userFullName', user.displayName || user.email.split('@')[0]);
+                localStorage.setItem('userEmail', user.email);
+
+                redirectToHome(buttonElement, "Đăng nhập thành công!");
+
+            } catch (error) {
+                buttonElement.disabled = false;
+                buttonElement.innerHTML = originalHTML;
+                console.error("Google Auth Error Code:", error.code);
+                console.error("Google Auth Error Message:", error.message);
                 
-                showToast("Đăng nhập thành công!", "success");
-                setTimeout(() => window.location.href = 'home.html', 1000);
-                return;
-            }
-
-            const isMatch = (identifier === savedUserName || identifier === savedEmail);
-            if (isMatch && (!savedPassword || password === savedPassword)) {
-                showToast("Đăng nhập thành công!", "success");
-                setTimeout(() => window.location.href = 'home.html', 1000);
-            } else {
-                showToast("Tên đăng nhập hoặc mật khẩu không chính xác!", "error");
+                // Hiển thị nguyên văn lỗi ra modal để dễ chẩn đoán
+                showAlert("Lỗi Google Auth: " + error.message, "error");
             }
         }
 
-        // Đăng ký thành công sẽ lưu thông tin, báo thành công và chuyển sang tab Đăng nhập
-        function handleRegister(e) {
-            e.preventDefault();
-            
-            const userName = document.getElementById('regUserName').value.trim();
-            const userFullName = document.getElementById('regFullName').value.trim();
-            const userEmail = document.getElementById('regEmail').value.trim();
-            const password = document.getElementById('regPassword').value;
+        document.getElementById('btn-google-login').addEventListener('click', function() {
+            handleGoogleLogin(this);
+        });
+        document.getElementById('btn-google-reg').addEventListener('click', function() {
+            handleGoogleLogin(this);
+        });
 
-            if (password.length < 6) {
-                showToast("Mật khẩu phải có ít nhất 6 ký tự!", "error");
+        // 1. ĐĂNG KÝ EMAIL
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault(); 
+            const fullname = document.getElementById('register-fullname').value.trim();
+            const email = document.getElementById('register-email').value.trim();
+            const password = document.getElementById('register-password').value;
+            const confirmPassword = document.getElementById('register-confirm-password').value;
+
+            if (password !== confirmPassword) {
+                showAlert("Mật khẩu xác nhận không khớp! Vui lòng kiểm tra lại.", "error");
                 return;
             }
 
-            localStorage.setItem('userName', userName);
-            localStorage.setItem('userFullName', userFullName);
-            localStorage.setItem('userEmail', userEmail);
-            localStorage.setItem('userPassword', password);
+            btnRegister.disabled = true;
+            btnRegister.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang xử lý...';
 
-            showToast("Đăng ký thành công! Vui lòng đăng nhập.", "success");
-            
-            // Xóa form đăng ký và tự động chuyển về tab Đăng nhập sau 1.2 giây
-            document.getElementById('registerFormContainer').querySelector('form').reset();
-            setTimeout(() => {
-                switchTab('login');
-                document.getElementById('loginIdentifier').value = userName;
-            }, 1200);
-        }
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                try {
+                    await setDoc(doc(db, "users", userCredential.user.uid), {
+                        uid: userCredential.user.uid,
+                        fullname: fullname,
+                        email: email,
+                        role: "student", 
+                        createdAt: new Date()
+                    });
+                } catch (firestoreError) {}
+                
+                localStorage.setItem('userName', fullname); 
+                localStorage.setItem('userFullName', fullname);
+                localStorage.setItem('userEmail', email);
+
+                redirectToHome(btnRegister, "Đăng ký thành công!");
+
+            } catch (error) {
+                btnRegister.disabled = false;
+                btnRegister.innerHTML = '<i class="fa-solid fa-user-plus"></i> Tạo Tài Khoản';
+                if (error.code === 'auth/email-already-in-use') {
+                    showAlert("Email này đã được đăng ký trước đó!", "error");
+                } else {
+                    showAlert("Lỗi đăng ký: " + error.message, "error");
+                }
+            }
+        });
+
+        // 2. ĐĂNG NHẬP EMAIL
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault(); 
+            btnLogin.disabled = true;
+            btnLogin.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang kiểm tra...';
+
+            const email = document.getElementById('login-email').value.trim();
+            const password = document.getElementById('login-password').value;
+
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                
+                localStorage.setItem('userName', email.split('@')[0]); 
+                localStorage.setItem('userFullName', email.split('@')[0]);
+                localStorage.setItem('userEmail', email);
+
+                redirectToHome(btnLogin, "Đăng nhập thành công!");
+            } catch (error) {
+                btnLogin.disabled = false;
+                btnLogin.innerHTML = '<i class="fa-solid fa-right-to-bracket"></i> Đăng Nhập';
+                
+                if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
+                    showAlert("Tài khoản chưa tồn tại hoặc sai mật khẩu!", "error");
+                } else if (error.code === 'auth/too-many-requests') {
+                    showAlert("Bạn đã đăng nhập sai quá nhiều lần. Vui lòng thử lại sau!", "error");
+                } else {
+                    showAlert("Có lỗi xảy ra: " + error.code, "error");
+                }
+            }
+        });
     </script>
 </body>
 </html>

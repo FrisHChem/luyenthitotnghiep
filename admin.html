@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang Quản Lý Đề Thi - Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: #f8fafc; color: #1e293b; padding-bottom: 60px; min-height: 100vh; }
+
+        .navbar {
+            background: #ffffff; border-bottom: 1px solid #e2e8f0; padding: 14px 5%;
+            display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100;
+        }
+        .brand { font-size: 18px; font-weight: 800; color: #2563eb; text-decoration: none; display: flex; align-items: center; gap: 8px; }
+        
+        .container { max-width: 1000px; margin: 30px auto; padding: 0 20px; }
+        .admin-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 28px; margin-bottom: 30px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02); }
+        .card-title { font-size: 18px; font-weight: 800; color: #0f172a; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; border-bottom: 2px solid #f1f5f9; padding-bottom: 12px; }
+
+        /* MODAL KHUNG ĐĂNG NHẬP ADMIN */
+        .login-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(4px);
+            display: flex; align-items: center; justify-content: center; z-index: 1000;
+        }
+        .login-card {
+            background: #ffffff; border-radius: 20px; padding: 32px; width: 100%; max-width: 400px;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); text-align: center;
+        }
+        .login-card h3 { font-size: 20px; font-weight: 800; color: #0f172a; margin-bottom: 6px; }
+        .login-card p { font-size: 13px; color: #64748b; margin-bottom: 20px; }
+
+        .form-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-bottom: 20px; }
+        .form-group { display: flex; flex-direction: column; gap: 6px; }
+        .form-group.full { grid-column: span 3; }
+        .form-group.span-2 { grid-column: span 2; }
+        label { font-size: 13px; font-weight: 700; color: #475569; }
+        input[type="text"], input[type="password"], input[type="email"], input[type="number"], select {
+            padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; outline: none; transition: 0.2s; width: 100%;
+        }
+        input:focus, select:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+
+        /* KHU VỰC NHẬP ĐÁP ÁN */
+        .answers-editor { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin-top: 15px; }
+        
+        .p1-keys-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; margin-top: 10px; }
+        .key-item { background: #fff; border: 1px solid #cbd5e1; padding: 8px 12px; border-radius: 8px; display: flex; align-items: center; justify-content: space-between; }
+        .key-item select { padding: 4px 8px; font-size: 12px; font-weight: 700; }
+
+        .p2-keys-list { display: flex; flex-direction: column; gap: 12px; margin-top: 10px; }
+        .p2-key-card { background: #fff; border: 1px solid #cbd5e1; padding: 12px 16px; border-radius: 10px; }
+        .p2-sub-row { display: flex; gap: 15px; margin-top: 8px; font-size: 13px; font-weight: 600; }
+
+        .p3-keys-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-top: 10px; }
+        .p3-key-item { background: #fff; border: 1px solid #cbd5e1; padding: 10px 14px; border-radius: 8px; display: flex; flex-direction: column; gap: 6px; }
+        .p3-key-item input { font-size: 13px; padding: 6px 10px; font-weight: 600; }
+
+        .btn-primary { background: #2563eb; color: white; border: none; padding: 12px 24px; border-radius: 10px; font-weight: 700; font-size: 14px; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; }
+        .btn-primary:hover { background: #1d4ed8; }
+
+        /* DANH SÁCH ĐỀ THI ĐÃ TẠO */
+        .exam-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
+        .exam-table th { background: #f8fafc; padding: 12px 16px; color: #64748b; font-size: 12px; font-weight: 700; border-bottom: 1px solid #e2e8f0; }
+        .exam-table td { padding: 14px 16px; border-bottom: 1px solid #f1f5f9; font-weight: 600; }
+        .btn-delete { color: #dc2626; background: #fef2f2; border: 1px solid #fecaca; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 700; }
+        .btn-delete:hover { background: #dc2626; color: white; }
+    </style>
+</head>
+<body>
+
+    <!-- KHUNG ĐĂNG NHẬP XÁC THỰC QUYỀN ADMIN -->
+    <div id="adminLoginModal" class="login-overlay">
+        <div class="login-card">
+            <i class="fa-solid fa-lock" style="font-size: 36px; color: #2563eb; margin-bottom: 12px;"></i>
+            <h3>Đăng Nhập Quản Trị Viên</h3>
+            <p>Nhập email và mật khẩu Admin để truy cập trang quản lý</p>
+            
+            <form onsubmit="handleAdminLogin(event)">
+                <div class="form-group" style="margin-bottom: 12px; text-align: left;">
+                    <label>Email Admin</label>
+                    <input type="email" id="adminEmailInput" placeholder="nguyenbaongocc271009@gmail.com" required>
+                </div>
+                <div class="form-group" style="margin-bottom: 20px; text-align: left;">
+                    <label>Mật Khẩu</label>
+                    <input type="password" id="adminPassInput" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn-primary">Đăng Nhập Quản Trị</button>
+            </form>
+            <div style="margin-top: 15px;">
+                <a href="home.html" style="text-decoration: none; font-size: 13px; color: #64748b; font-weight: 600;">Quay lại trang chính học sinh</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <a href="home.html" class="brand"><i class="fa-solid fa-user-shield"></i> Trang Quản Lý Đề Thi (Admin)</a>
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <span id="adminStatusText" style="font-size: 13px; font-weight: 700; color: #16a34a;"></span>
+            <button onclick="adminLogout()" style="background: #f1f5f9; border: 1px solid #cbd5e1; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 12px; color: #dc2626;">
+            <a href="home.html" class="brand"><i class="fa-solid fa-user-shield"></i> Thoát
+        </div>
+    </div>
+
+    <!-- NỘI DUNG QUẢN TRỊ ADMIN (ẨN CHO ĐẾN KHI ĐĂNG NHẬP THÀNH CÔNG) -->
+    <div class="container" id="adminMainContent" style="display: none;">
+        <div class="admin-card">
+            <div class="card-title"><i class="fa-solid fa-file-circle-plus"></i> Tạo Đề Thi & Đáp Án Mới (Cấu Trúc 3 Phần)</div>
+            
+            <form id="createExamForm" onsubmit="saveExam(event)">
+                <div class="form-grid">
+                    <div class="form-group full">
+                        <label>Tên / Tiêu Đề Bài Thi</label>
+                        <input type="text" id="examTitle" placeholder="Ví dụ: Đề Thi Thử Tốt Nghiệp THPT Chuẩn Cấu Trúc 3 Phần 2026" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Môn Học</label>
+                        <select id="examSubject">
+                            <option value="Toán">Toán</option>
+                            <option value="Lý">Vật Lý</option>
+                            <option value="Hóa">Hóa Học</option>
+                            <option value="Tiếng Anh">Tiếng Anh</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Thời Gian Làm Bài (Phút)</label>
+                        <input type="number" id="examDuration" value="90" min="5" required>
+                    </div>
+                    <div class="form-group">
+                        <label>File Đề Thi (PDF)</label>
+                        <input type="file" id="pdfExamFile" accept="application/pdf" required>
+                    </div>
+                    <div class="form-group span-2">
+                        <label>File Đáp Án Chi Tiết (PDF/Ảnh) - Cho học sinh tải về</label>
+                        <input type="file" id="pdfAnswerFile" accept="application/pdf,image/*">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Số Câu Phần I (Trắc nghiệm ABCD)</label>
+                        <input type="number" id="part1Count" value="12" min="0" onchange="generateAnswerForm()">
+                    </div>
+                    <div class="form-group">
+                        <label>Số Câu Phần II (Đúng / Sai)</label>
+                        <input type="number" id="part2Count" value="4" min="0" onchange="generateAnswerForm()">
+                    </div>
+                    <div class="form-group">
+                        <label>Số Câu Phần III (Trả Lời Ngắn)</label>
+                        <input type="number" id="part3Count" value="6" min="0" onchange="generateAnswerForm()">
+                    </div>
+                </div>
+
+                <div class="answers-editor">
+                    <h4 style="font-size: 15px; font-weight: 700; color: #1e293b;"><i class="fa-solid fa-key"></i> Bảng Nhập Đáp Án Chấm Điểm Tự Động</h4>
+                    
+                    <div id="p1EditorSection" style="margin-top: 15px;">
+                        <label style="color:#2563eb;">PHẦN I: Chọn đáp án đúng (A, B, C, D)</label>
+                        <div class="p1-keys-grid" id="p1KeysContainer"></div>
+                    </div>
+
+                    <div id="p2EditorSection" style="margin-top: 20px;">
+                        <label style="color:#2563eb;">PHẦN II: Chọn Đúng / Sai cho từng ý (a, b, c, d)</label>
+                        <div class="p2-keys-list" id="p2KeysContainer"></div>
+                    </div>
+
+                    <div id="p3EditorSection" style="margin-top: 20px;">
+                        <label style="color:#2563eb;">PHẦN III: Nhập kết quả đáp án ngắn (Ví dụ: 12.5, -3, 1/2...)</label>
+                        <div class="p3-keys-grid" id="p3KeysContainer"></div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 24px; display: flex; justify-content: flex-end;">
+                    <button type="submit" class="btn-primary" style="width: auto;"><i class="fa-solid fa-cloud-arrow-up"></i> Lưu & Phát Hành Đề Thi</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="admin-card">
+            <div class="card-title"><i class="fa-solid fa-list-check"></i> Danh Sách Đề Thi Do Giáo Viên Thêm</div>
+            <table class="exam-table">
+                <thead>
+                    <tr>
+                        <th>Mã Đề</th>
+                        <th>Tên Bài Thi</th>
+                        <th>Môn</th>
+                        <th>Thời Gian</th>
+                        <th>Cấu Trúc Đề</th>
+                        <th style="text-align: center;">Thao Tác</th>
+                    </tr>
+                </thead>
+                <tbody id="examListBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="exams-data.js"></script>
+    <script>
+        const ADMIN_EMAIL = "nguyenbaongocc271009@gmail.com";
+        const ADMIN_PASS = "BaoNgoc@2710";
+
+        function checkAdminAuth() {
+            const isAuth = sessionStorage.getItem('isAdminAuth');
+            const currentUser = sessionStorage.getItem('adminUser');
+
+            // Hỗ trợ trường hợp đăng nhập từ Auth chuyển qua hoặc lưu Admin sẵn
+            const localUserEmail = localStorage.getItem('userEmail'); 
+            
+            if ((isAuth === 'true' && currentUser === ADMIN_EMAIL) || (localUserEmail === ADMIN_EMAIL)) {
+                document.getElementById('adminLoginModal').style.display = 'none';
+                document.getElementById('adminMainContent').style.display = 'block';
+                document.getElementById('adminStatusText').innerText = `Admin: ${ADMIN_EMAIL}`;
+                generateAnswerForm();
+                renderAdminExamList();
+            } else {
+                document.getElementById('adminLoginModal').style.display = 'flex';
+                document.getElementById('adminMainContent').style.display = 'none';
+            }
+        }
+
+        function handleAdminLogin(e) {
+            e.preventDefault();
+            const emailInput = document.getElementById('adminEmailInput').value.trim();
+            const passInput = document.getElementById('adminPassInput').value.trim();
+
+            if (emailInput === ADMIN_EMAIL && passInput === ADMIN_PASS) {
+                sessionStorage.setItem('isAdminAuth', 'true');
+                sessionStorage.setItem('adminUser', ADMIN_EMAIL);
+                alert("Đăng nhập quyền Admin thành công!");
+                checkAdminAuth();
+            } else {
+                alert("Email hoặc Mật khẩu Quản trị viên không chính xác!");
+            }
+        }
+
+        function adminLogout() {
+            sessionStorage.removeItem('isAdminAuth');
+            sessionStorage.removeItem('adminUser');
+            checkAdminAuth();
+        }
+
+        function generateAnswerForm() {
+            const p1Count = parseInt(document.getElementById('part1Count').value) || 0;
+            const p2Count = parseInt(document.getElementById('part2Count').value) || 0;
+            const p3Count = parseInt(document.getElementById('part3Count').value) || 0;
+
+            const p1Container = document.getElementById('p1KeysContainer');
+            p1Container.innerHTML = '';
+            for (let i = 1; i <= p1Count; i++) {
+                p1Container.innerHTML += `
+                    <div class="key-item">
+                        <span>Câu ${i}:</span>
+                        <select id="ans-p1-${i}">
+                            <option value="0">A</option>
+                            <option value="1">B</option>
+                            <option value="2">C</option>
+                            <option value="3">D</option>
+                        </select>
+                    </div>
+                `;
+            }
+
+            const p2Container = document.getElementById('p2KeysContainer');
+            p2Container.innerHTML = '';
+            const startP2Num = p1Count + 1;
+            for (let i = 0; i < p2Count; i++) {
+                const qNum = startP2Num + i;
+                p2Container.innerHTML += `
+                    <div class="p2-key-card">
+                        <div style="font-size:13px; font-weight:700;">Câu ${qNum}</div>
+                        <div class="p2-sub-row">
+                            ${['a','b','c','d'].map(sub => `
+                                <div>
+                                    Ý ${sub}: 
+                                    <select id="ans-p2-${qNum}-${sub}">
+                                        <option value="true">Đúng</option>
+                                        <option value="false">Sai</option>
+                                    </select>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            const p3Container = document.getElementById('p3KeysContainer');
+            p3Container.innerHTML = '';
+            for (let i = 1; i <= p3Count; i++) {
+                p3Container.innerHTML += `
+                    <div class="p3-key-item">
+                        <label>Câu ${i} (Phần III):</label>
+                        <input type="text" id="ans-p3-${i}" placeholder="Nhập đáp án chuẩn..." required>
+                    </div>
+                `;
+            }
+        }
+
+        function saveExam(e) {
+            e.preventDefault();
+
+            const title = document.getElementById('examTitle').value;
+            const subject = document.getElementById('examSubject').value;
+            const duration = parseInt(document.getElementById('examDuration').value);
+            const p1Total = parseInt(document.getElementById('part1Count').value) || 0;
+            const p2Total = parseInt(document.getElementById('part2Count').value) || 0;
+            const p3Total = parseInt(document.getElementById('part3Count').value) || 0;
+
+            const examId = 'custom-' + Date.now();
+
+            let part1Answers = {};
+            for (let i = 1; i <= p1Total; i++) {
+                part1Answers[i] = parseInt(document.getElementById(`ans-p1-${i}`).value);
+            }
+
+            let part2Answers = {};
+            const startP2Num = p1Total + 1;
+            for (let i = 0; i < p2Total; i++) {
+                const qNum = startP2Num + i;
+                part2Answers[qNum] = {
+                    a: document.getElementById(`ans-p2-${qNum}-a`).value === 'true',
+                    b: document.getElementById(`ans-p2-${qNum}-b`).value === 'true',
+                    c: document.getElementById(`ans-p2-${qNum}-c`).value === 'true',
+                    d: document.getElementById(`ans-p2-${qNum}-d`).value === 'true'
+                };
+            }
+
+            let part3Answers = {};
+            for (let i = 1; i <= p3Total; i++) {
+                part3Answers[i] = document.getElementById(`ans-p3-${i}`).value.trim();
+            }
+
+            const pdfExamFile = document.getElementById('pdfExamFile').files[0];
+            const pdfAnsFile = document.getElementById('pdfAnswerFile').files[0];
+
+            const readerExam = new FileReader();
+            readerExam.onload = function(eventExam) {
+                const examDataObj = {
+                    title: title,
+                    subject: subject,
+                    duration: duration,
+                    pdfUrl: eventExam.target.result,
+                    part1Total: p1Total,
+                    part2Total: p2Total,
+                    part3Total: p3Total,
+                    answers: {
+                        part1: part1Answers,
+                        part2: part2Answers,
+                        part3: part3Answers
+                    }
+                };
+
+                if (pdfAnsFile) {
+                    const readerAns = new FileReader();
+                    readerAns.onload = function(eventAns) {
+                        examDataObj.answerFileUrl = eventAns.target.result;
+                        examDataObj.answerFileName = pdfAnsFile.name;
+                        storeExam(examId, examDataObj);
+                    };
+                    readerAns.readAsDataURL(pdfAnsFile);
+                } else {
+                    storeExam(examId, examDataObj);
+                }
+            };
+            readerExam.readAsDataURL(pdfExamFile);
+        }
+
+        function storeExam(examId, examObj) {
+            const customExams = JSON.parse(localStorage.getItem('custom_exams') || '{}');
+            customExams[examId] = examObj;
+            localStorage.setItem('custom_exams', JSON.stringify(customExams));
+
+            alert('Đã tạo đề thi 3 phần thành công!');
+            document.getElementById('createExamForm').reset();
+            generateAnswerForm();
+            renderAdminExamList();
+        }
+
+        function deleteExam(examId) {
+            if (confirm('Bạn có chắc chắn muốn xóa đề thi này không?')) {
+                const customExams = JSON.parse(localStorage.getItem('custom_exams') || '{}');
+                delete customExams[examId];
+                localStorage.setItem('custom_exams', JSON.stringify(customExams));
+                renderAdminExamList();
+            }
+        }
+
+        function renderAdminExamList() {
+            const tbody = document.getElementById('examListBody');
+            tbody.innerHTML = '';
+
+            const customExams = JSON.parse(localStorage.getItem('custom_exams') || '{}');
+            const keys = Object.keys(customExams);
+
+            if (keys.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 20px; color: #94a3b8;">Chưa có đề thi nào do Admin tạo thêm!</td></tr>`;
+                return;
+            }
+
+            keys.forEach(key => {
+                const exam = customExams[key];
+                tbody.innerHTML += `
+                    <tr>
+                        <td><code>${key}</code></td>
+                        <td>${exam.title}</td>
+                        <td><span style="background:#eff6ff; color:#2563eb; padding:2px 8px; border-radius:4px; font-size:12px;">${exam.subject}</span></td>
+                        <td>${exam.duration} phút</td>
+                        <td>P1: ${exam.part1Total || 0}c | P2: ${exam.part2Total || 0}c | P3: ${exam.part3Total || 0}c</td>
+                        <td style="text-align: center;">
+                            <button class="btn-delete" onclick="deleteExam('${key}')"><i class="fa-solid fa-trash"></i> Xóa</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAdminAuth();
+        });
+    </script>
+</body>
+</html>

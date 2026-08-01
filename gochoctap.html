@@ -866,7 +866,7 @@
         }
 
         // 8. GHI CHÚ
-        let notesData = JSON.parse(localStorage.getItem('myMultiNotes')) || [{ id: 1, title: 'Ghi chú mẫu', content: 'Luyện tập đề Toán 12 hàng ngày.' }];
+        let notesData = JSON.parse(localStorage.getItem('myMultiNotes')) 
         function renderNotes() {
             const container = document.getElementById('notes-list');
             container.innerHTML = '';
