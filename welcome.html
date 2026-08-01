@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chinh Phục Toán Hóa Sinh THPT</title>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', -apple-system, sans-serif; }
+        body { background-color: #ffffff; color: #1f2937; line-height: 1.5; }
+
+        .navbar {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 16px 40px; border-bottom: 1px solid #e5e7eb;
+            background-color: #ffffff; position: sticky; top: 0;
+        }
+        .navbar .logo { font-size: 20px; font-weight: 700; color: #111827; text-decoration: none; }
+        .nav-actions { display: flex; gap: 12px; }
+
+        .btn {
+            padding: 10px 20px; border-radius: 6px; font-size: 14px; font-weight: 600;
+            text-decoration: none; cursor: pointer; transition: all 0.2s ease;
+            text-align: center; display: inline-block;
+        }
+        .btn-outline { background-color: transparent; color: #374151; border: 1px solid #d1d5db; }
+        .btn-outline:hover { background-color: #f3f4f6; color: #111827; }
+        
+        .btn-primary { background-color: #2563eb; color: white; border: 1px solid #2563eb; }
+        .btn-primary:hover { background-color: #1d4ed8; }
+
+        .hero { max-width: 800px; margin: 80px auto 60px; padding: 0 24px; text-align: center; }
+        .hero h1 { font-size: 42px; font-weight: 800; color: #111827; margin-bottom: 16px; line-height: 1.2; }
+        .hero p { font-size: 18px; color: #4b5563; margin-bottom: 32px; }
+        .hero-buttons { display: flex; justify-content: center; gap: 16px; }
+        
+        .features {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+            max-width: 1000px; margin: 0 auto 80px; padding: 0 24px;
+        }
+        .feature-card {
+            padding: 24px; background-color: #f9fafb; border: 1px solid #e5e7eb;
+            border-radius: 8px; text-align: center; transition: transform 0.2s;
+        }
+        .feature-card:hover { transform: translateY(-5px); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+        .feature-card h3 { font-size: 16px; font-weight: 600; color: #111827; margin-bottom: 8px; }
+        .feature-card p { font-size: 14px; color: #4b5563; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <a href="#" class="logo">🎓 Toán Hóa Sinh THPT</a>
+        <div class="nav-actions">
+            <a href="auth.html" class="btn btn-outline">Đăng nhập</a>
+            <a href="auth.html?form=register" class="btn btn-primary">Đăng ký ngay</a>
+        </div>
+    </nav>
+
+    <main class="hero">
+        <h1>Chinh phục Toán Hóa Sinh <br>bứt phá điểm số THPT</h1>
+        <p>Nền tảng học tập trực tuyến toàn diện, giúp bạn nắm vững kiến thức trọng tâm và rèn luyện kỹ năng giải đề chuẩn cấu trúc Bộ GD&ĐT.</p>
+        <div class="hero-buttons">
+            <a href="auth.html?form=register" class="btn btn-primary" style="font-size: 16px; padding: 12px 32px;">Bắt đầu học ngay</a>
+            <a href="auth.html" class="btn btn-outline" style="font-size: 16px; padding: 12px 32px;">Đăng nhập</a>
+        </div>
+    </main>
+
+    <section class="features">
+        <div class="feature-card">
+            <h3>📐 Toán học Logic</h3>
+            <p>Hệ thống bài giảng Đại số, Giải tích, Hình học kèm mẹo bấm máy tính Casio giải nhanh.</p>
+        </div>
+        <div class="feature-card">
+            <h3>🧪 Hóa học Trực quan</h3>
+            <p>Phân loại các dạng bài tập Vô cơ, Hữu cơ và phương pháp giải chuỗi phản ứng cực chuẩn.</p>
+        </div>
+        <div class="feature-card">
+            <h3>🧬 Sinh học Đỉnh cao</h3>
+            <p>Tóm tắt lý thuyết Di truyền học, Tiến hóa, Sinh thái dễ thuộc, dễ nhớ nhất.</p>
+        </div>
+    </section>
+
+</body>
+</html>

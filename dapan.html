@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi Tiết Đáp Án & Bộ Lọc Kết Quả</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: #f8fafc; color: #1e293b; min-height: 100vh; padding-bottom: 50px; }
+
+        .top-navbar {
+            background: #ffffff; border-bottom: 1px solid #e2e8f0; padding: 16px 40px;
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+        }
+        .nav-brand { font-size: 18px; font-weight: 800; color: #2563eb; display: flex; align-items: center; gap: 12px; }
+
+        .container { max-width: 900px; margin: 0 auto; padding: 0 20px; }
+        
+        .result-summary {
+            background: #ffffff; border: 1px solid #e2e8f0; padding: 30px; border-radius: 20px;
+            text-align: center; margin-bottom: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+        }
+        .result-summary h2 { color: #0f172a; margin-bottom: 8px; font-size: 24px; }
+        .score-badge { font-size: 38px; font-weight: 800; color: #2563eb; margin: 8px 0; }
+        .summary-subtext { font-size: 14px; color: #475569; font-weight: 600; }
+
+        /* Thanh bộ lọc đáp án */
+        .filter-bar {
+            background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 14px 20px;
+            display: flex; align-items: center; gap: 12px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+        }
+        .filter-label { font-weight: 700; font-size: 14px; color: #0f172a; display: flex; align-items: center; gap: 6px; margin-right: 8px; }
+        .filter-btn {
+            background: #f1f5f9; border: 1px solid #e2e8f0; color: #475569; padding: 8px 16px;
+            border-radius: 20px; font-weight: 600; font-size: 13px; cursor: pointer; transition: 0.2s;
+        }
+        .filter-btn:hover { background: #e2e8f0; }
+        .filter-btn.active { background: #2563eb; color: white; border-color: #2563eb; box-shadow: 0 4px 12px rgba(37,99,235,0.2); }
+
+        .section-box {
+            background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 24px;
+            margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        }
+        .section-title { font-size: 16px; font-weight: 800; color: #2563eb; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+
+        .review-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+        .review-item {
+            border-radius: 10px; padding: 12px 16px; display: flex; justify-content: space-between; 
+            align-items: center; font-size: 14px; border: 1px solid #e2e8f0;
+        }
+        .review-item.is-correct { border-color: #10b981; background: #ecfdf5; color: #065f46; }
+        .review-item.is-incorrect { border-color: #ef4444; background: #fef2f2; color: #991b1b; }
+
+        .tf-review-card { border-radius: 10px; padding: 14px; margin-bottom: 10px; border: 1px solid #e2e8f0; background: #f8fafc; }
+        .tf-review-card.is-correct { border-color: #10b981; background: #ecfdf5; }
+        .tf-review-card.is-incorrect { border-color: #ef4444; background: #fef2f2; }
+
+        .tf-review-title { font-weight: 700; color: #0f172a; margin-bottom: 8px; font-size: 14px; }
+        .tf-sub-row { display: flex; justify-content: space-between; font-size: 13px; padding: 5px 0; border-top: 1px solid #e2e8f0; }
+
+        .btn-back { display: inline-flex; align-items: center; gap: 8px; background: #2563eb; color: #fff; padding: 12px 24px; text-decoration: none; border-radius: 12px; font-weight: 600; margin-bottom: 25px; transition: 0.2s; }
+        .btn-back:hover { background: #1d4ed8; }
+    </style>
+</head>
+<body>
+
+    <div class="top-navbar">
+        <div class="nav-brand"><i class="fa-solid fa-graduation-cap"></i> Hệ Thống Ôn Thi THPT</div>
+    </div>
+
+    <div class="container" id="result-container">
+        <a href="luyende.html" class="btn-back"><i class="fa-solid fa-arrow-left"></i> Quay lại danh sách đề</a>
+        
+        <div class="result-summary">
+            <h2 id="result-exam-title">Kết Quả Bài Thi</h2>
+            <div class="score-badge" id="result-score">0.0 đ</div>
+            <div class="summary-subtext" id="result-summary-text">...</div>
+        </div>
+
+        <!-- Thanh bộ lọc kết quả -->
+        <div class="filter-bar">
+            <div class="filter-label"><i class="fa-solid fa-filter" style="color: #2563eb;"></i> Lọc xem:</div>
+            <button class="filter-btn active" onclick="filterResults('all', this)">Tất cả</button>
+            <button class="filter-btn" onclick="filterResults('correct', this)">Chỉ câu đúng</button>
+            <button class="filter-btn" onclick="filterResults('incorrect', this)">Chỉ câu sai</button>
+        </div>
+
+        <!-- PHẦN I CHI TIẾT -->
+        <div class="section-box" id="sec-mcq-box" style="display: none;">
+            <div class="section-title"><i class="fa-solid fa-list-check"></i> Phần I: Trắc nghiệm nhiều lựa chọn</div>
+            <div class="review-grid" id="mcq-review-grid"></div>
+        </div>
+
+        <!-- PHẦN II CHI TIẾT -->
+        <div class="section-box" id="sec-tf-box" style="display: none;">
+            <div class="section-title"><i class="fa-solid fa-check-double"></i> Phần II: Trắc nghiệm đúng sai</div>
+            <div id="tf-review-list"></div>
+        </div>
+
+        <!-- PHẦN III CHI TIẾT -->
+        <div class="section-box" id="sec-short-box" style="display: none;">
+            <div class="section-title"><i class="fa-solid fa-pen"></i> Phần III: Trả lời ngắn</div>
+            <div class="review-grid" id="short-review-grid"></div>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const dataStr = localStorage.getItem('currentExamResult');
+            if (!dataStr) {
+                document.getElementById('result-container').innerHTML = '<h3>Không tìm thấy kết quả bài thi!</h3><br><a href="luyende.html" class="btn-back">Về danh sách đề</a>';
+                return;
+            }
+
+            const result = JSON.parse(dataStr);
+            document.getElementById('result-exam-title').innerText = `Kết Quả: ${result.examName}`;
+            document.getElementById('result-score').innerText = result.score + ' đ';
+            document.getElementById('result-summary-text').innerText = result.summaryText;
+
+            const letterMap = ['A', 'B', 'C', 'D'];
+
+            // Render Phần I
+            if (result.mcqDetails && result.mcqDetails.length > 0) {
+                document.getElementById('sec-mcq-box').style.display = 'block';
+                const grid = document.getElementById('mcq-review-grid');
+                let html = '';
+                result.mcqDetails.forEach((item, idx) => {
+                    const isCorr = item.userChoice === item.correctVal;
+                    const uChar = item.userChoice !== -1 ? letterMap[item.userChoice] : 'Chưa chọn';
+                    const cChar = letterMap[item.correctVal];
+                    const statusClass = isCorr ? 'is-correct' : 'is-incorrect';
+                    html += `
+                        <div class="review-item ${statusClass}" data-status="${isCorr ? 'correct' : 'incorrect'}">
+                            <span><b>Câu ${idx + 1}:</b> Bạn: <b>${uChar}</b></span>
+                            <span>Đáp án: <b>${cChar}</b></span>
+                        </div>
+                    `;
+                });
+                grid.innerHTML = html;
+            }
+
+            // Render Phần II
+            if (result.tfDetails && result.tfDetails.length > 0) {
+                document.getElementById('sec-tf-box').style.display = 'block';
+                const list = document.getElementById('tf-review-list');
+                let html = '';
+                result.tfDetails.forEach((tfItem, idx) => {
+                    let subHtml = '';
+                    let allSubCorrect = true;
+                    ['a', 'b', 'c', 'd'].forEach((subLetter, subIdx) => {
+                        const sub = tfItem[subIdx];
+                        const isCorr = sub.userVal === sub.correctBool;
+                        if (!isCorr) allSubCorrect = false;
+                        const uStr = sub.userVal === null ? 'Trống' : (sub.userVal ? 'Đúng' : 'Sai');
+                        const cStr = sub.correctBool ? 'Đúng' : 'Sai';
+                        subHtml += `
+                            <div class="tf-sub-row" style="color: ${isCorr ? '#065f46' : '#991b1b'};">
+                                <span>Ý ${subLetter}: Bạn chọn <b>${uStr}</b></span>
+                                <span>Chuẩn: <b>${cStr}</b></span>
+                            </div>
+                        `;
+                    });
+                    const cardStatus = allSubCorrect ? 'correct' : 'incorrect';
+                    html += `
+                        <div class="tf-review-card ${allSubCorrect ? 'is-correct' : 'is-incorrect'}" data-status="${cardStatus}">
+                            <div class="tf-review-title">Câu ${idx + 1}</div>
+                            ${subHtml}
+                        </div>
+                    `;
+                });
+                list.innerHTML = html;
+            }
+
+            // Render Phần III
+            if (result.shortDetails && result.shortDetails.length > 0) {
+                document.getElementById('sec-short-box').style.display = 'block';
+                const grid = document.getElementById('short-review-grid');
+                let html = '';
+                result.shortDetails.forEach((item, idx) => {
+                    const isCorr = item.userVal.toLowerCase() === item.correctAns.toLowerCase();
+                    const statusClass = isCorr ? 'is-correct' : 'is-incorrect';
+                    html += `
+                        <div class="review-item ${statusClass}" data-status="${isCorr ? 'correct' : 'incorrect'}">
+                            <span><b>Câu ${idx + 1}:</b> Bạn nhập: <b>${item.userVal || 'Trống'}</b></span>
+                            <span>Đáp án: <b>${item.correctAns}</b></span>
+                        </div>
+                    `;
+                });
+                grid.innerHTML = html;
+            }
+        });
+
+        // Hàm xử lý bộ lọc câu đúng / câu sai
+        function filterResults(type, btn) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const items = document.querySelectorAll('.review-item, .tf-review-card');
+            items.forEach(item => {
+                const status = item.getAttribute('data-status');
+                if (type === 'all') {
+                    item.style.display = 'flex';
+                } else if (type === 'correct' && status === 'correct') {
+                    item.style.display = 'flex';
+                } else if (type === 'incorrect' && status === 'incorrect') {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>

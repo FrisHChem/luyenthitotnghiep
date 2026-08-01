@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phòng Thi Trực Tuyến - Chuẩn Azota</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: #f8fafc; color: #1e293b; min-height: 100vh; padding-bottom: 50px; }
+
+        .top-navbar {
+            background: #ffffff; border-bottom: 1px solid #e2e8f0; padding: 16px 40px;
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;
+        }
+        .nav-brand { font-size: 18px; font-weight: 800; color: #2563eb; display: flex; align-items: center; gap: 12px; }
+
+        .exam-container {
+            max-width: 1400px; margin: 0 auto; padding: 0 20px;
+            display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 25px; align-items: start;
+        }
+
+        .drive-viewer-card {
+            background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03); height: 82vh; display: flex; flex-direction: column;
+        }
+        .viewer-header {
+            padding: 16px 20px; background: #f1f5f9; border-bottom: 1px solid #e2e8f0;
+            font-weight: 700; font-size: 15px; display: flex; align-items: center; gap: 10px; color: #2563eb;
+        }
+        .drive-iframe { width: 100%; height: calc(100% - 53px); border: none; }
+
+        .answer-sheet-card {
+            background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 24px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03); height: 82vh; display: flex; flex-direction: column;
+        }
+        .sheet-header { font-size: 18px; font-weight: 700; color: #0f172a; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #e2e8f0; }
+        
+        .questions-scroll-area {
+            flex-grow: 1; overflow-y: auto; padding-right: 8px; display: flex; flex-direction: column; gap: 20px;
+        }
+        
+        .section-title-tag { font-size: 15px; font-weight: 800; color: #2563eb; background: rgba(37,99,235,0.1); padding: 8px 14px; border-radius: 8px; margin-bottom: 10px; }
+
+        .question-row { background: #f8fafc; border: 1px solid #e2e8f0; padding: 14px; border-radius: 12px; }
+        .q-number { font-weight: 700; font-size: 14px; color: #0f172a; margin-bottom: 10px; }
+        
+        .options-group { display: flex; gap: 12px; }
+        .options-group label {
+            display: flex; align-items: center; gap: 6px; font-weight: 600; font-size: 14px;
+            cursor: pointer; padding: 6px 12px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; transition: 0.2s;
+        }
+        .options-group label:hover { background: #e2e8f0; }
+        .options-group input { accent-color: #2563eb; }
+
+        .tf-statement { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 14px; background: #ffffff; padding: 8px 12px; border-radius: 8px; border: 1px solid #e2e8f0; }
+        .tf-choices { display: flex; gap: 15px; font-weight: 600; }
+
+        .short-input { width: 100%; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; outline: none; }
+        .short-input:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+
+        .btn-submit {
+            background: #2563eb; color: white; border: none; padding: 14px; border-radius: 12px;
+            font-weight: 700; font-size: 16px; cursor: pointer; width: 100%; margin-top: 20px;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3); transition: 0.2s;
+        }
+        .btn-submit:hover { background: #1d4ed8; }
+    </style>
+</head>
+<body>
+
+    <div class="top-navbar">
+        <div class="nav-brand"><i class="fa-solid fa-graduation-cap"></i> Phòng Thi Trực Tuyến</div>
+        <div id="student-name" style="font-weight: 700; color: #64748b;">Thí sinh: Nguyễn Bảo Ngọc</div>
+    </div>
+
+    <div class="exam-container">
+        <div class="drive-viewer-card">
+            <div class="viewer-header">
+                <i class="fa-solid fa-file-pdf"></i> <span id="exam-title-header">Nội dung đề thi</span>
+            </div>
+            <iframe id="drive-iframe-view" class="drive-iframe" src="" allow="autoplay"></iframe>
+        </div>
+
+        <div class="answer-sheet-card">
+            <div class="sheet-header">Phiếu Trả Lời Trắc Nghiệm</div>
+            <div class="questions-scroll-area" id="answers-container"></div>
+            <button class="btn-submit" onclick="submitExam()"><i class="fa-solid fa-paper-plane"></i> Nộp Bài Thi</button>
+        </div>
+    </div>
+
+    <script>
+        const activeExamId = localStorage.getItem('activeExamId') || 'exam_default';
+        const examDatabase = JSON.parse(localStorage.getItem('examDatabase')) || {};
+        const currentExam = examDatabase[activeExamId] || {
+            name: "Đề thi mẫu",
+            driveUrl: "https://drive.google.com/file/d/1_YOUR_GOOGLE_DRIVE_FILE_ID_HERE/preview",
+            mcqAnswers: [0, 1, 2, 3],
+            trueFalseAnswers: [[true, false, true, true]],
+            shortAnswers: ["25"]
+        };
+
+        function initExamRoom() {
+            document.getElementById('exam-title-header').innerText = currentExam.name;
+            if (currentExam.driveUrl) {
+                document.getElementById('drive-iframe-view').src = currentExam.driveUrl;
+            }
+
+            const container = document.getElementById('answers-container');
+            let html = '';
+
+            // PHẦN I
+            html += `<div class="section-title-tag">PHẦN I. Câu trắc nghiệm nhiều lựa chọn</div>`;
+            const mcqCount = currentExam.mcqAnswers ? currentExam.mcqAnswers.length : 4;
+            for (let i = 0; i < mcqCount; i++) {
+                html += `
+                    <div class="question-row">
+                        <div class="q-number">Câu ${i + 1}</div>
+                        <div class="options-group">
+                            <label><input type="radio" name="mcq_${i}" value="0"> A</label>
+                            <label><input type="radio" name="mcq_${i}" value="1"> B</label>
+                            <label><input type="radio" name="mcq_${i}" value="2"> C</label>
+                            <label><input type="radio" name="mcq_${i}" value="3"> D</label>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // PHẦN II
+            html += `<div class="section-title-tag" style="margin-top: 15px;">PHẦN II. Câu trắc nghiệm đúng sai</div>`;
+            const tfList = currentExam.trueFalseAnswers || [[true, false, true, true]];
+            tfList.forEach((tfItem, idx) => {
+                let statementsHtml = '';
+                ['a', 'b', 'c', 'd'].forEach((subLetter, subIdx) => {
+                    statementsHtml += `
+                        <div class="tf-statement">
+                            <span>Ý ${subLetter}) Mệnh đề số ${subIdx + 1}</span>
+                            <div class="tf-choices">
+                                <label><input type="radio" name="tf_${idx}_${subIdx}" value="true"> Đúng</label>
+                                <label><input type="radio" name="tf_${idx}_${subIdx}" value="false"> Sai</label>
+                            </div>
+                        </div>
+                    `;
+                });
+                html += `
+                    <div class="question-row">
+                        <div class="q-number">Câu ${idx + 1}</div>
+                        ${statementsHtml}
+                    </div>
+                `;
+            });
+
+            // PHẦN III
+            html += `<div class="section-title-tag" style="margin-top: 15px;">PHẦN III. Câu trắc nghiệm trả lời ngắn</div>`;
+            const shortList = currentExam.shortAnswers || ["10"];
+            shortList.forEach((sItem, idx) => {
+                html += `
+                    <div class="question-row">
+                        <div class="q-number">Câu ${idx + 1}</div>
+                        <input type="text" id="short_${idx}" class="short-input" placeholder="Nhập đáp án số/chữ...">
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        function submitExam() {
+            let mcqDetails = [];
+            let mcqCorrect = 0;
+            currentExam.mcqAnswers.forEach((correctVal, i) => {
+                const selected = document.querySelector(`input[name="mcq_${i}"]:checked`);
+                const userChoice = selected ? parseInt(selected.value) : -1;
+                if (userChoice === correctVal) mcqCorrect++;
+                mcqDetails.push({ userChoice, correctVal });
+            });
+
+            let tfDetails = [];
+            let tfCorrectCount = 0;
+            let tfTotalCount = 0;
+            const tfList = currentExam.trueFalseAnswers || [];
+            tfList.forEach((tfItem, idx) => {
+                let subArr = [];
+                tfItem.forEach((correctBool, subIdx) => {
+                    tfTotalCount++;
+                    const selected = document.querySelector(`input[name="tf_${idx}_${subIdx}"]:checked`);
+                    const userVal = selected ? (selected.value === 'true') : null;
+                    if (userVal === correctBool) tfCorrectCount++;
+                    subArr.push({ userVal, correctBool });
+                });
+                tfDetails.push(subArr);
+            });
+
+            let shortDetails = [];
+            let shortCorrect = 0;
+            currentExam.shortAnswers.forEach((correctAns, idx) => {
+                const inputVal = document.getElementById(`short_${idx}`).value.trim();
+                if (inputVal.toLowerCase() === correctAns.toLowerCase()) {
+                    shortCorrect++;
+                }
+                shortDetails.push({ userVal: inputVal, correctAns });
+            });
+
+            const totalQ = mcqDetails.length + tfTotalCount + shortDetails.length;
+            const earned = mcqCorrect + (tfCorrectCount * 0.25) + shortCorrect;
+            const finalScore = totalQ > 0 ? ((earned / totalQ) * 10).toFixed(2) : 0;
+
+            const resultData = {
+                examName: currentExam.name,
+                score: finalScore,
+                subject: currentExam.subject || 'Toán',
+                timeSpent: "45 phút",
+                mcqDetails,
+                tfDetails,
+                shortDetails,
+                summaryText: `Trắc nghiệm: ${mcqCorrect}/${mcqDetails.length} | Đúng/Sai: ${tfCorrectCount}/${tfTotalCount} ý | Trả lời ngắn: ${shortCorrect}/${shortDetails.length}`
+            };
+
+            let history = JSON.parse(localStorage.getItem('examHistory')) || [];
+            history.push(resultData);
+            localStorage.setItem('examHistory', JSON.stringify(history));
+            localStorage.setItem('currentExamResult', JSON.stringify(resultData));
+
+            window.location.href = 'dapan.html';
+        }
+
+        initExamRoom();
+    </script>
+</body>
+</html>

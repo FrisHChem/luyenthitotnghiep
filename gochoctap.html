@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Góc Học Tập Tập Trung</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+
+        /* MẶC ĐỊNH: GIAO DIỆN XANH - TRẮNG SÁNG SỦA, THANH LỊCH KHI CHƯA CHỌN NỀN */
+        body {
+            background-color: #f8fafc;
+            background-size: cover; background-position: center; background-attachment: fixed;
+            color: #1e293b; min-height: 100vh; overflow-x: hidden; padding: 40px;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        body.has-custom-bg {
+            color: #ffffff;
+        }
+
+        .overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 255, 255, 0.4); z-index: -1;
+            transition: background 0.3s ease;
+        }
+        body.has-custom-bg .overlay {
+            background: rgba(0, 0, 0, 0.45);
+        }
+
+        /* THANH ĐIỀU HƯỚNG & WIDGET ĐẾM NGƯỢC Ở TRÊN CÙNG */
+        .top-bar {
+            position: fixed; top: 25px; left: 30px; right: 30px; z-index: 200;
+            display: flex; justify-content: space-between; align-items: center; pointer-events: none;
+        }
+        
+        .nav-links-group {
+            pointer-events: auto;
+            background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px;
+            padding: 6px; display: flex; gap: 6px; box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            transition: 0.3s;
+        }
+        body.has-custom-bg .nav-links-group {
+            background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(20px);
+            border-color: rgba(255, 255, 255, 0.15); box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .nav-link-btn {
+            text-decoration: none; color: #64748b; padding: 10px 18px; border-radius: 10px;
+            font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 8px; transition: 0.2s;
+        }
+        body.has-custom-bg .nav-link-btn { color: #cbd5e1; }
+        .nav-link-btn:hover { background: #f1f5f9; color: #2563eb; transform: translateY(-1px); }
+        body.has-custom-bg .nav-link-btn:hover { background: rgba(255,255,255,0.15); color: #ffffff; }
+        
+        .nav-link-btn.active {
+            background: #2563eb; color: #ffffff; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+        body.has-custom-bg .nav-link-btn.active {
+            background: #c084fc; color: #0f172a; box-shadow: 0 4px 12px rgba(192, 132, 252, 0.4);
+        }
+
+        .exam-countdown-widget {
+            pointer-events: auto;
+            background: #ffffff; border: 1px solid #e2e8f0; border-radius: 18px;
+            padding: 16px 28px; display: flex; flex-direction: column; align-items: center; gap: 6px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05); min-width: 300px;
+            transition: 0.3s;
+        }
+        body.has-custom-bg .exam-countdown-widget {
+            background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(20px);
+            border-color: rgba(59, 130, 246, 0.4); box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+        }
+        .exam-widget-title { font-size: 13px; font-weight: 700; color: #2563eb; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 6px; }
+        body.has-custom-bg .exam-widget-title { color: #93c5fd; }
+        .exam-widget-time { font-size: 30px; font-weight: 800; color: #0f172a; }
+        body.has-custom-bg .exam-widget-time { color: #60a5fa; text-shadow: 0 0 15px rgba(59,130,246,0.6); }
+        .exam-widget-date { font-size: 12px; color: #64748b; font-weight: 500; }
+        body.has-custom-bg .exam-widget-date { color: #94a3b8; }
+
+        /* THANH CÔNG CỤ (DOCK) BÊN TRÁI */
+        .sidebar {
+            position: fixed; left: 25px; top: 50%; transform: translateY(-50%);
+            background: #ffffff; border: 1px solid #e2e8f0; border-radius: 20px;
+            display: flex; flex-direction: column; padding: 24px 14px; gap: 24px; z-index: 1000;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08); transition: 0.3s;
+        }
+        body.has-custom-bg .sidebar {
+            background: rgba(20, 20, 20, 0.75); backdrop-filter: blur(16px);
+            border-color: rgba(255, 255, 255, 0.15); box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .tool-btn {
+            background: transparent; border: none; color: #64748b; font-size: 22px;
+            cursor: pointer; width: 44px; height: 44px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center; transition: 0.3s;
+        }
+        body.has-custom-bg .tool-btn { color: #a1a1aa; }
+        .tool-btn:hover, .tool-btn.active { background: #f1f5f9; color: #2563eb; }
+        body.has-custom-bg .tool-btn:hover, body.has-custom-bg .tool-btn.active { background: rgba(255,255,255,0.15); color: #fff; }
+
+        /* KHU VỰC HIỂN THỊ CÁC CARD TRỰC TIẾP TRÊN WEB */
+        .main-dashboard {
+            margin-top: 120px; margin-left: 95px; margin-right: 20px;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(440px, 1fr)); gap: 32px;
+            padding-bottom: 50px;
+        }
+
+        .dash-card {
+            background: #ffffff; border: 1px solid #e2e8f0; border-radius: 24px;
+            padding: 32px; box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            display: flex; flex-direction: column; gap: 24px; transition: 0.3s;
+        }
+        body.has-custom-bg .dash-card {
+            background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(20px);
+            border-color: rgba(255, 255, 255, 0.15); box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+        }
+        .dash-card:hover { border-color: #cbd5e1; }
+        body.has-custom-bg .dash-card:hover { border-color: rgba(59, 130, 246, 0.5); }
+        .dash-card-title { font-size: 14px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 1px; display: flex; align-items: center; gap: 10px; }
+        body.has-custom-bg .dash-card-title { color: #94a3b8; }
+
+        /* CARD HỌC HÔM NAY / TIẾN ĐỘ */
+        .study-progress-box { display: flex; flex-direction: column; gap: 16px; }
+        .study-time-text { font-size: 46px; font-weight: 800; color: #0f172a; }
+        body.has-custom-bg .study-time-text { color: #f8fafc; }
+        .progress-track { width: 100%; height: 10px; background: #e2e8f0; border-radius: 5px; overflow: hidden; }
+        body.has-custom-bg .progress-track { background: rgba(255,255,255,0.1); }
+        .progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #f59e0b, #10b981); border-radius: 5px; transition: width 0.4s; }
+        .streak-text { color: #f59e0b; font-weight: 600; font-size: 14px; display: flex; align-items: center; gap: 8px; }
+
+        /* CARD LOFI MUSIC CHILL CÓ HIỂN THỊ CHI TIẾT */
+        .music-player-top { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+        .music-controls-row { display: flex; align-items: center; gap: 14px; }
+        .album-art { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid #a855f7; box-shadow: 0 0 15px rgba(168,85,247,0.4); flex-shrink: 0; }
+        
+        .song-details-info { display: flex; flex-direction: column; gap: 3px; overflow: hidden; flex-grow: 1; }
+        .song-title-display { font-weight: 700; font-size: 15px; color: #0f172a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        body.has-custom-bg .song-title-display { color: #f8fafc; }
+        .song-artist-display { font-size: 13px; color: #64748b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        body.has-custom-bg .song-artist-display { color: #94a3b8; }
+
+        .song-select-dropdown {
+            background: #f1f5f9; border: 1px solid #e2e8f0;
+            border-radius: 14px; padding: 12px 16px; color: #1e293b; font-size: 14px; outline: none; cursor: pointer;
+            display: flex; justify-content: space-between; align-items: center; transition: 0.3s; width: 100%;
+        }
+        body.has-custom-bg .song-select-dropdown { background: rgba(0,0,0,0.3); border-color: rgba(255,255,255,0.2); color: white; }
+        .song-select-dropdown select { background: transparent; border: none; color: inherit; width: 100%; outline: none; cursor: pointer; font-size: 14px; }
+        .song-select-dropdown select option { background: #ffffff; color: #1e293b; }
+        body.has-custom-bg .song-select-dropdown select option { background: #0f172a; color: white; }
+
+        .player-action-row { display: flex; align-items: center; justify-content: space-between; gap: 18px; }
+        .btn-play-pause { width: 46px; height: 46px; background: #c084fc; border: none; border-radius: 50%; color: #0f172a; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(192,132,252,0.5); transition: 0.2s; flex-shrink: 0; }
+        .btn-play-pause:hover { transform: scale(1.05); }
+
+        .time-slider-box { width: 100%; display: flex; align-items: center; gap: 14px; font-size: 12px; color: #64748b; }
+        body.has-custom-bg .time-slider-box { color: #94a3b8; }
+        .time-slider-track { flex-grow: 1; height: 6px; background: #e2e8f0; border-radius: 3px; position: relative; cursor: pointer; }
+        body.has-custom-bg .time-slider-track { background: rgba(255,255,255,0.15); }
+        .time-slider-bar { height: 100%; width: 0%; background: #c084fc; border-radius: 3px; }
+
+        /* CỬA SỔ NỔI ĐA NHIỆM */
+        .panel {
+            position: absolute; top: 120px; left: 140px;
+            width: 460px; max-height: 82vh;
+            background: #ffffff; border: 1px solid #e2e8f0; border-radius: 20px;
+            padding: 28px; display: none; flex-direction: column; z-index: 100;
+            overflow-y: auto; box-shadow: 0 20px 50px rgba(0,0,0,0.15); transition: 0.3s;
+        }
+        body.has-custom-bg .panel {
+            background: rgba(15, 15, 15, 0.9); backdrop-filter: blur(20px);
+            border-color: rgba(255, 255, 255, 0.15); box-shadow: 0 15px 50px rgba(0,0,0,0.7); color: #ffffff;
+        }
+        .panel.show { display: flex; }
+        #panel-schedule { width: 920px; max-width: 90vw; height: 78vh; }
+        #panel-note { width: 520px; height: 72vh; }
+        #panel-music { width: 500px; } /* Mở rộng panel music một chút để chứa màn hình YouTube */
+
+        .panel-header { 
+            display: flex; justify-content: space-between; align-items: center; 
+            margin-bottom: 22px; cursor: move; user-select: none;
+            padding-bottom: 10px; border-bottom: 1px solid #f1f5f9;
+        }
+        body.has-custom-bg .panel-header { border-bottom-color: rgba(255,255,255,0.1); }
+        .panel-title { font-size: 18px; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+        .btn-close { background: transparent; border: none; color: #64748b; font-size: 20px; cursor: pointer; transition: 0.2s; }
+        body.has-custom-bg .btn-close { color: #a1a1aa; }
+        .btn-close:hover { color: #ef4444; transform: rotate(90deg); }
+
+        /* HỘP THOẠI ĐỒ HỌA (CUSTOM MODAL) */
+        #custom-modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(5px);
+            z-index: 99999; display: none; align-items: center; justify-content: center;
+        }
+        .custom-modal {
+            background: #ffffff; border: 1px solid #e2e8f0;
+            border-radius: 16px; padding: 28px; width: 420px; box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            display: flex; flex-direction: column; gap: 18px; animation: scaleUp 0.2s ease; color: #0f172a;
+        }
+        body.has-custom-bg .custom-modal { background: #1e293b; border-color: rgba(255, 255, 255, 0.15); color: #f8fafc; }
+        @keyframes scaleUp { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .custom-modal-title { font-size: 16px; font-weight: 600; }
+        .custom-modal input {
+            width: 100%; padding: 12px; background: #f8fafc; border: 1px solid #10b981;
+            border-radius: 10px; color: #0f172a; font-size: 15px; outline: none;
+        }
+        body.has-custom-bg .custom-modal input { background: rgba(0, 0, 0, 0.3); color: white; }
+        .custom-modal-buttons { display: flex; justify-content: flex-end; gap: 12px; }
+        .btn-modal-ok { background: #10b981; color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; }
+        .btn-modal-cancel { background: #cbd5e1; color: #1e293b; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; }
+        body.has-custom-bg .btn-modal-cancel { background: #475569; color: white; }
+
+        /* CÁC THÀNH PHẦN KHÁC */
+        .timer-tabs { display: flex; gap: 8px; margin-bottom: 20px; background: #f1f5f9; padding: 4px; border-radius: 10px; }
+        body.has-custom-bg .timer-tabs { background: rgba(255,255,255,0.05); }
+        .timer-tab { flex: 1; background: transparent; border: none; padding: 10px; color: #64748b; font-weight: 600; font-size: 13px; border-radius: 8px; cursor: pointer; transition: 0.2s; }
+        body.has-custom-bg .timer-tab { color: #a1a1aa; }
+        .timer-tab.active { background: #10b981; color: white; }
+        .timer-section { display: none; flex-direction: column; gap: 18px; }
+        .timer-section.active { display: flex; }
+        .timer-display { font-size: 60px; font-weight: 700; text-align: center; color: #10b981; }
+        .timer-controls { display: flex; justify-content: center; gap: 14px; }
+        .btn-timer { padding: 10px 20px; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; color: white; transition: 0.2s; font-size: 14px; }
+        .btn-start { background: #10b981; } .btn-pause { background: #f59e0b; } .btn-reset { background: #64748b; }
+        .custom-timer-input { display: flex; gap: 12px; align-items: center; justify-content: center; }
+        .custom-timer-input input { width: 90px; padding: 8px; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; color: #1e293b; text-align: center; font-size: 16px; outline: none; }
+        body.has-custom-bg .custom-timer-input input { background: rgba(0,0,0,0.3); border-color: rgba(255,255,255,0.2); color: white; }
+
+        .bg-grid { display: grid; grid-template-columns: 1fr; gap: 16px; margin-bottom: 16px; }
+        .bg-item { height: 110px; border-radius: 12px; overflow: hidden; cursor: pointer; border: 2px solid transparent; position: relative; transition: 0.2s; }
+        .bg-item:hover { border-color: #a855f7; transform: scale(1.02); }
+        .bg-item img { width: 100%; height: 100%; object-fit: cover; }
+        .bg-name { position: absolute; bottom: 0; left: 0; width: 100%; padding: 8px; background: linear-gradient(transparent, rgba(0,0,0,0.8)); text-align: center; font-size: 13px; font-weight: 600; color: #fff;}
+        .upload-section { background: rgba(168, 85, 247, 0.1); border: 2px dashed #a855f7; border-radius: 12px; padding: 20px; text-align: center; cursor: pointer; transition: 0.2s; }
+        .upload-section:hover { background: rgba(168, 85, 247, 0.2); }
+
+        .notes-container { display: flex; flex-direction: column; gap: 16px; height: calc(100% - 60px); overflow-y: auto; padding-right: 6px; }
+        .btn-add-note { background: rgba(234, 179, 8, 0.15); border: 1px dashed #eab308; color: #ca8a04; padding: 12px; border-radius: 10px; cursor: pointer; font-weight: 600; font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; }
+        body.has-custom-bg .btn-add-note { color: #fde047; }
+        .btn-add-note:hover { background: rgba(234, 179, 8, 0.25); }
+        .note-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+        body.has-custom-bg .note-card { background: rgba(255, 255, 255, 0.07); border-color: rgba(255, 255, 255, 0.12); }
+        .note-header { display: flex; justify-content: space-between; align-items: center; }
+        .note-title-input { background: transparent; border: none; color: #ca8a04; font-weight: 600; font-size: 15px; outline: none; width: 80%; }
+        body.has-custom-bg .note-title-input { color: #fde047; }
+        .note-textarea { width: 100%; height: 110px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px; color: #1e293b; font-size: 14px; resize: vertical; outline: none; line-height: 1.5; }
+        body.has-custom-bg .note-textarea { background: rgba(0, 0, 0, 0.25); border-color: rgba(255, 255, 255, 0.1); color: white; }
+        .btn-del-note { background: transparent; border: none; color: #ef4444; cursor: pointer; font-size: 16px; padding: 4px; }
+
+        .kanban-board { display: flex; gap: 20px; overflow-x: auto; padding-bottom: 16px; scrollbar-width: thin; scrollbar-color: #3b82f6 #e2e8f0; height: calc(100% - 60px); }
+        .kanban-board::-webkit-scrollbar { height: 8px; }
+        .kanban-board::-webkit-scrollbar-thumb { background: #3b82f6; border-radius: 10px; }
+        .kanban-col { background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 16px; min-width: 280px; display: flex; flex-direction: column; }
+        body.has-custom-bg .kanban-col { background: rgba(0, 0, 0, 0.4); border-color: rgba(255,255,255,0.1); }
+        .kanban-header { padding: 16px; font-weight: 600; border-bottom: 1px solid #e2e8f0; color: #334155; display: flex; justify-content: space-between;}
+        body.has-custom-bg .kanban-header { border-bottom-color: rgba(255,255,255,0.05); color: #e2e8f0; }
+        .kanban-tasks { padding: 14px; display: flex; flex-direction: column; gap: 12px; overflow-y: auto; flex-grow: 1;}
+        .kanban-task { background: #ffffff; border: 1px solid #e2e8f0; padding: 12px; border-radius: 10px; font-size: 14px; display: flex; justify-content: space-between; align-items: center; transition: 0.2s;}
+        body.has-custom-bg .kanban-task { background: rgba(255,255,255,0.1); border: none; }
+        .kanban-task.done { opacity: 0.5; text-decoration: line-through; background: #f1f5f9;}
+        body.has-custom-bg .kanban-task.done { background: rgba(255,255,255,0.05); }
+        .kanban-task i { cursor: pointer; color: #ef4444; font-size: 16px; padding: 4px;}
+        .add-task-btn { margin: 14px; padding: 12px; background: #e2e8f0; color: #475569; border: 1px dashed #cbd5e1; border-radius: 10px; cursor: pointer; text-align: left; font-size: 14px; transition: 0.2s;}
+        body.has-custom-bg .add-task-btn { background: rgba(255,255,255,0.05); color: #a1a1aa; border-color: rgba(255,255,255,0.2); }
+        .add-task-btn:hover { background: #cbd5e1; color: #0f172a; }
+        body.has-custom-bg .add-task-btn:hover { background: rgba(255,255,255,0.15); color: white; border-color: #fff;}
+    </style>
+</head>
+<body id="app-body">
+    <script>
+        const savedBg = localStorage.getItem('savedBg');
+        const bodyEl = document.getElementById('app-body');
+        if (savedBg) {
+            bodyEl.style.backgroundImage = `url('${savedBg}')`;
+            bodyEl.classList.add('has-custom-bg');
+        } else {
+            bodyEl.classList.remove('has-custom-bg');
+        }
+    </script>
+
+    <div class="overlay"></div>
+
+    <!-- HỘP THOẠI ĐỒ HỌA (CUSTOM MODAL) -->
+    <div id="custom-modal-overlay">
+        <div class="custom-modal">
+            <div class="custom-modal-title" id="modal-prompt-title">Nhập nội dung:</div>
+            <input type="text" id="modal-prompt-input" autocomplete="off">
+            <div class="custom-modal-buttons">
+                <button class="btn-modal-cancel" onclick="closeCustomPrompt(false)">Huỷ</button>
+                <button class="btn-modal-ok" onclick="closeCustomPrompt(true)">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- THANH ĐIỀU HƯỚNG ĐẦY ĐỦ (TRANG CHỦ, GÓC HỌC TẬP, LUYỆN ĐỀ) & WIDGET ĐẾM NGƯỢC THI TỐT NGHIỆP 2027 -->
+    <div class="top-bar">
+        <div class="nav-links-group">
+            <a href="index.html" class="nav-link-btn"><i class="fa-solid fa-house"></i> Trang chủ</a>
+            <a href="gochoctap.html" class="nav-link-btn active"><i class="fa-solid fa-book-open"></i> Góc học tập</a>
+            <a href="luyende.html" class="nav-link-btn"><i class="fa-solid fa-pen-to-square"></i> Luyện đề</a>
+        </div>
+        <div class="exam-countdown-widget">
+            <div class="exam-widget-title"><i class="fa-solid fa-hourglass-half"></i> Thi Tốt Nghiệp THPT 2027</div>
+            <div class="exam-widget-time" id="widget-countdown-num">Đang tính...</div>
+            <div class="exam-widget-date">Mục tiêu: 25/06/2027</div>
+        </div>
+    </div>
+
+    <!-- THANH CÔNG CỤ (DOCK) BÊN TRÁI -->
+    <div class="sidebar">
+        <button class="tool-btn" onclick="togglePanel('panel-pomodoro', this)" title="Đồng hồ & Hẹn giờ"><i class="fa-solid fa-clock"></i></button>
+        <button class="tool-btn active" onclick="togglePanel('panel-music', this)" title="Âm thanh & Nhạc"><i class="fa-solid fa-music"></i></button>
+        <button class="tool-btn" onclick="togglePanel('panel-bg', this)" title="Cảnh nền & Upload"><i class="fa-solid fa-image"></i></button>
+        <button class="tool-btn" onclick="togglePanel('panel-note', this)" title="Ghi chú nhanh"><i class="fa-solid fa-note-sticky"></i></button>
+        <button class="tool-btn" onclick="togglePanel('panel-schedule', this)" title="Lịch học"><i class="fa-solid fa-calendar-days"></i></button>
+    </div>
+
+    <!-- GIAO DIỆN TRỰC TIẾP TRÊN MÀN HÌNH CHÍNH -->
+    <div class="main-dashboard">
+        <!-- 1. THẺ HỌC HÔM NAY / TIẾN ĐỘ -->
+        <div class="dash-card">
+            <div class="dash-card-title"><i class="fa-solid fa-fire" style="color: #f59e0b;"></i> Học Hôm Nay (Thời gian thực)</div>
+            <div class="study-progress-box">
+                <div class="study-time-text" id="main-study-time">0p / 120p</div>
+                <div class="progress-track"><div class="progress-fill" id="main-progress-fill"></div></div>
+                <div class="streak-text"><i class="fa-solid fa-fire"></i> Streak: <span id="main-streak-count">1</span> ngày (Đang truy cập trực tuyến)</div>
+            </div>
+        </div>
+
+        <!-- 2. THẺ LOFI MUSIC CHILL CÓ HIỂN THỊ TÊN BÀI HÁT & NGHỆ SĨ -->
+        <div class="dash-card">
+            <div class="dash-card-title"><i class="fa-solid fa-headphones"></i> Lofi Music Chill</div>
+            <div style="display: flex; flex-direction: column; gap: 20px;">
+                <div class="music-player-top">
+                    <div class="music-controls-row">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=150&auto=format&fit=crop" class="album-art" alt="Art">
+                        <div class="song-details-info">
+                            <div class="song-title-display" id="display-song-title">Chill 1 - Lofi Hip Hop Beats</div>
+                            <div class="song-artist-display" id="display-song-artist">Lofi Girl Official</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="song-select-dropdown">
+                    <select id="main-song-select" onchange="onSongSelectChange(this)">
+                        <option value="jfKfPfyJRdk" data-title="Chill 1 - Lofi Hip Hop Beats" data-artist="Lofi Girl Official">Chill 1 - Lofi Hip Hop Beats</option>
+                        <option value="lTRiuFIWV54" data-title="Chill 2 - Coffee Shop Radio" data-artist="Coffee Shop Music">Chill 2 - Coffee Shop Radio</option>
+                        <option value="kgx4WGK0oNU" data-title="Chill 3 - Smooth Jazz & Bossa" data-artist="Smooth Jazz Café">Chill 3 - Smooth Jazz & Bossa</option>
+                        <option value="Dx5qSvIWz3g" data-title="Chill 4 - Piano & Coffee" data-artist="Relaxing Piano Music">Chill 4 - Piano & Coffee</option>
+                    </select>
+                    <i class="fa-solid fa-chevron-down" style="font-size: 12px; color: #94a3b8;"></i>
+                </div>
+
+                <div class="player-action-row">
+                    <button class="btn-play-pause" id="main-play-btn" onclick="toggleMainPlay()"><i class="fa-solid fa-play" id="main-play-icon"></i></button>
+                    <div style="display: flex; align-items: center; gap: 10px; color: #64748b; font-size: 13px;">
+                        <i class="fa-solid fa-volume-high"></i>
+                        <input type="range" min="0" max="100" value="80" style="accent-color: #c084fc; width: 90px;" oninput="adjustVolume(this.value)">
+                    </div>
+                </div>
+
+                <div class="time-slider-box">
+                    <span id="current-time-text">0:00</span>
+                    <div class="time-slider-track"><div class="time-slider-bar" id="time-slider-bar"></div></div>
+                    <span>Trực tuyến</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CÁC PANEL NỔI KHI BẤM NÚT TRÊN DOCK -->
+    <div class="panel" id="panel-pomodoro" style="top: 120px; left: 140px;">
+        <div class="panel-header" onmousedown="startDrag(event, 'panel-pomodoro')">
+            <div class="panel-title"><i class="fa-solid fa-clock" style="color: #10b981;"></i> Bộ đếm thời gian</div>
+            <button class="btn-close" onclick="closePanel('panel-pomodoro')"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="timer-tabs">
+            <button class="timer-tab active" onclick="switchTimerTab('pomo', this)">Pomodoro</button>
+            <button class="timer-tab" onclick="switchTimerTab('test', this)">Thi thử</button>
+            <button class="timer-tab" onclick="switchTimerTab('stopwatch', this)">Bấm giờ</button>
+        </div>
+        <div class="timer-section active" id="sec-pomo">
+            <div class="timer-display" id="pomo-display">25:00</div>
+            <div class="timer-controls">
+                <button class="btn-timer btn-start" onclick="startPomo()">Bắt đầu</button>
+                <button class="btn-timer btn-pause" onclick="pausePomo()">Tạm dừng</button>
+                <button class="btn-timer btn-reset" onclick="resetPomo()">Làm lại</button>
+            </div>
+        </div>
+        <div class="timer-section" id="sec-test">
+            <div class="custom-timer-input">
+                <span style="font-size: 14px;">Thời gian (phút):</span>
+                <input type="number" id="test-mins" value="45" min="1" max="180">
+                <button class="btn-timer btn-start" onclick="setTestTimer()" style="padding: 8px 14px;">Đặt</button>
+            </div>
+            <div class="timer-display" id="test-display">45:00</div>
+            <div class="timer-controls">
+                <button class="btn-timer btn-start" onclick="startTest()">Bắt đầu</button>
+                <button class="btn-timer btn-pause" onclick="pauseTest()">Tạm dừng</button>
+                <button class="btn-timer btn-reset" onclick="resetTest()">Làm lại</button>
+            </div>
+        </div>
+        <div class="timer-section" id="sec-stopwatch">
+            <div class="timer-display" id="sw-display">00:00:00</div>
+            <div class="timer-controls">
+                <button class="btn-timer btn-start" onclick="startSW()">Bắt đầu</button>
+                <button class="btn-timer btn-pause" onclick="pauseSW()">Dừng</button>
+                <button class="btn-timer btn-reset" onclick="resetSW()">Xóa</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PANEL ÂM THANH MỞ RỘNG - CÓ MÀN HÌNH YOUTUBE TRỰC QUAN -->
+    <div class="panel" id="panel-music" style="top: 120px; left: 180px;">
+        <div class="panel-header" onmousedown="startDrag(event, 'panel-music')">
+            <div class="panel-title"><i class="fa-solid fa-music" style="color: #3b82f6;"></i> Sound Mixer & Playlist</div>
+            <button class="btn-close" onclick="closePanel('panel-music')"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div style="font-size: 14px; margin-bottom: 12px;">Dán link YouTube tùy thích để phát nhạc hoặc xem trực tiếp:</div>
+        <div style="display: flex; gap: 10px; margin-bottom: 16px;">
+            <input type="text" id="yt-link" style="flex-grow:1; padding:10px 14px; background:rgba(0,0,0,0.06); border:1px solid rgba(0,0,0,0.15); border-radius:8px; outline:none; font-size: 13px;" placeholder="Dán link YouTube...">
+            <button onclick="loadCustomVideo()" style="padding:0 16px; background:#ef4444; color:white; border:none; border-radius:8px; font-weight:600; cursor:pointer; font-size: 13px;">Phát</button>
+        </div>
+
+        <!-- MÀN HÌNH HIỂN THỊ YOUTUBE TRỰC TIẾP TRONG PANEL -->
+        <div style="width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+            <iframe id="panel-yt-iframe" src="" style="width: 100%; height: 100%; border: none;" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <!-- PANEL CẢNH NỀN -->
+    <div class="panel" id="panel-bg" style="top: 120px; left: 220px;">
+        <div class="panel-header" onmousedown="startDrag(event, 'panel-bg')">
+            <div class="panel-title"><i class="fa-solid fa-image" style="color: #a855f7;"></i> Đổi cảnh nền</div>
+            <button class="btn-close" onclick="closePanel('panel-bg')"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="upload-section" onclick="document.getElementById('bg-file-input').click()">
+            <i class="fa-solid fa-cloud-arrow-up" style="font-size: 32px; color: #a855f7; margin-bottom: 8px;"></i>
+            <div style="font-weight: 600; font-size: 14px;">Tải ảnh / GIF cá nhân từ máy tính</div>
+            <input type="file" id="bg-file-input" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
+        </div>
+        <div style="height: 1px; background: rgba(0,0,0,0.1); margin: 20px 0;"></div>
+        <div class="bg-grid">
+            <div class="bg-item" onclick="changeBg('https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=1920&auto=format&fit=crop')">
+                <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=400&auto=format&fit=crop" alt="Forest">
+                <div class="bg-name">Đêm Rừng Sao</div>
+            </div>
+            <div class="bg-item" onclick="changeBg('https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=1920&auto=format&fit=crop')">
+                <img src="https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=400&auto=format&fit=crop" alt="Cosmos">
+                <div class="bg-name">Vũ Trụ</div>
+            </div>
+            <div class="bg-item" onclick="removeBg()">
+                <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #f1f5f9; color: #1e293b; font-weight: 600;">Khôi phục Xanh - Trắng</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PANEL GHI CHÚ -->
+    <div class="panel" id="panel-note" style="top: 120px; left: 260px;">
+        <div class="panel-header" onmousedown="startDrag(event, 'panel-note')">
+            <div class="panel-title"><i class="fa-solid fa-note-sticky" style="color: #eab308;"></i> Quản lý Ghi chú</div>
+            <button class="btn-close" onclick="closePanel('panel-note')"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="notes-container">
+            <button class="btn-add-note" onclick="addNote()"><i class="fa-solid fa-plus"></i> Thêm ghi chú mới</button>
+            <div id="notes-list" style="display: flex; flex-direction: column; gap: 14px;"></div>
+        </div>
+    </div>
+
+    <!-- PANEL LỊCH HỌC KANBAN -->
+    <div class="panel" id="panel-schedule" style="top: 120px; left: 160px;">
+        <div class="panel-header" onmousedown="startDrag(event, 'panel-schedule')">
+            <div class="panel-title"><i class="fa-solid fa-calendar-days" style="color: #ef4444;"></i> Lịch Học & Tiến Độ</div>
+            <button class="btn-close" onclick="closePanel('panel-schedule')"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="kanban-board" id="kanban-board"></div>
+    </div>
+
+    <script>
+        const currentUser = localStorage.getItem('currentUser') || "Nguyễn Bảo Ngọc";
+
+        // ĐẾM NGƯỢC THI TỐT NGHIỆP 2027
+        function updateExamCountdown() {
+            const examDate = new Date('2027-06-25T00:00:00');
+            const now = new Date();
+            const diffTime = examDate - now;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            const el = document.getElementById('widget-countdown-num');
+            if (diffDays >= 0) { el.innerText = `Còn ${diffDays} ngày`; } 
+            else { el.innerText = `Đã diễn ra!`; }
+        }
+        setInterval(updateExamCountdown, 1000);
+        updateExamCountdown();
+
+        // HỆ THỐNG PROMPT ĐỒNG HỌA
+        let promptCallback = null;
+        function showCustomPrompt(title, defaultValue, callback) {
+            document.getElementById('modal-prompt-title').innerText = title;
+            const input = document.getElementById('modal-prompt-input');
+            input.value = defaultValue || '';
+            document.getElementById('custom-modal-overlay').style.display = 'flex';
+            input.focus();
+            promptCallback = callback;
+        }
+        function closeCustomPrompt(isOk) {
+            document.getElementById('custom-modal-overlay').style.display = 'none';
+            const val = document.getElementById('modal-prompt-input').value;
+            if (promptCallback) { promptCallback(isOk ? val : null); promptCallback = null; }
+        }
+        document.getElementById('modal-prompt-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') closeCustomPrompt(true);
+        });
+
+        // ĐIỀU KHIỂN PANEL
+        let highestZ = 100;
+        function togglePanel(panelId, btnElement) {
+            const panel = document.getElementById(panelId);
+            if (panel.classList.contains('show')) {
+                panel.classList.remove('show');
+                btnElement.classList.remove('active');
+            } else {
+                panel.classList.add('show');
+                panel.style.zIndex = ++highestZ;
+                btnElement.classList.add('active');
+            }
+        }
+        function closePanel(panelId) {
+            document.getElementById(panelId).classList.remove('show');
+            document.querySelectorAll('.sidebar .tool-btn').forEach(btn => {
+                if(btn.getAttribute('onclick').includes(panelId)) btn.classList.remove('active');
+            });
+        }
+
+        // KÉO THẢ CỬA SỔ
+        let activePanel = null, startX = 0, startY = 0;
+        function startDrag(e, panelId) {
+            if (e.target.closest('button') || e.target.closest('input')) return;
+            activePanel = document.getElementById(panelId);
+            activePanel.style.zIndex = ++highestZ;
+            startX = e.clientX - activePanel.offsetLeft;
+            startY = e.clientY - activePanel.offsetTop;
+            document.addEventListener('mousemove', onDrag);
+            document.addEventListener('mouseup', stopDrag);
+        }
+        function onDrag(e) {
+            if (!activePanel) return;
+            activePanel.style.left = (e.clientX - startX) + 'px';
+            activePanel.style.top = (e.clientY - startY) + 'px';
+        }
+        function stopDrag() {
+            activePanel = null;
+            document.removeEventListener('mousemove', onDrag);
+            document.removeEventListener('mouseup', stopDrag);
+        }
+
+        // LOGIC TRÌNH PHÁT NHẠC CHÍNH (ĐỒNG BỘ HIỂN THỊ TRÊN MÀN HÌNH PANEL)
+        let isPlaying = false;
+        function toggleMainPlay() {
+            const icon = document.getElementById('main-play-icon');
+            const select = document.getElementById('main-song-select');
+            const panelIframe = document.getElementById('panel-yt-iframe');
+            
+            if (!isPlaying) {
+                panelIframe.src = `https://www.youtube-nocookie.com/embed/${select.value}?autoplay=1&loop=1&playlist=${select.value}`;
+                icon.className = "fa-solid fa-pause";
+                isPlaying = true;
+            } else {
+                panelIframe.src = "";
+                icon.className = "fa-solid fa-play";
+                isPlaying = false;
+            }
+        }
+        function onSongSelectChange(select) {
+            const selectedOption = select.options[select.selectedIndex];
+            const title = selectedOption.getAttribute('data-title');
+            const artist = selectedOption.getAttribute('data-artist');
+
+            document.getElementById('display-song-title').innerText = title;
+            document.getElementById('display-song-artist').innerText = artist;
+
+            if (isPlaying) {
+                document.getElementById('panel-yt-iframe').src = `https://www.youtube-nocookie.com/embed/${select.value}?autoplay=1&loop=1&playlist=${select.value}`;
+            }
+        }
+        function adjustVolume(val) {
+            // Thanh trượt âm lượng
+        }
+        function loadCustomVideo() {
+            const url = document.getElementById('yt-link').value.trim();
+            const match = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?|live|shorts)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i);
+            if (match) {
+                document.getElementById('panel-yt-iframe').src = `https://www.youtube-nocookie.com/embed/${match[1]}?autoplay=1`;
+                isPlaying = true;
+                document.getElementById('main-play-icon').className = "fa-solid fa-pause";
+                document.getElementById('display-song-title').innerText = "Video YouTube Tùy Chỉnh";
+                document.getElementById('display-song-artist').innerText = "Phát trực tiếp trên màn hình Panel";
+                document.getElementById('yt-link').value = "";
+            } else { alert("Link YouTube không hợp lệ!"); }
+        }
+
+        // THỜI GIAN THỰC TRUY CẬP WEB (REAL-TIME SESSION TRACKING)
+        let sessionSeconds = parseInt(localStorage.getItem('realtimeStudySeconds')) || 0;
+        function updateRealtimeStudyTime() {
+            sessionSeconds++;
+            localStorage.setItem('realtimeStudySeconds', sessionSeconds);
+            const totalMins = Math.floor(sessionSeconds / 60);
+            
+            document.getElementById('main-study-time').innerText = `${totalMins}p / 120p`;
+            const percent = Math.min(100, (totalMins / 120) * 100);
+            document.getElementById('main-progress-fill').style.width = percent + '%';
+        }
+        setInterval(updateRealtimeStudyTime, 1000);
+        updateRealtimeStudyTime();
+
+        // TAB ĐỒNG HỒ & POMODORO
+        function switchTimerTab(tabName, btn) {
+            document.querySelectorAll('.timer-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.timer-section').forEach(s => s.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById(`sec-${tabName}`).classList.add('active');
+        }
+        let pomoSeconds = 25 * 60, pomoInterval = null;
+        function updatePomoDisplay() {
+            const m = Math.floor(pomoSeconds / 60), s = pomoSeconds % 60;
+            document.getElementById('pomo-display').innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+        }
+        function startPomo() {
+            if (pomoInterval) return;
+            pomoInterval = setInterval(() => {
+                if (pomoSeconds > 0) { 
+                    pomoSeconds--; 
+                    updatePomoDisplay();
+                }
+                else { clearInterval(pomoInterval); pomoInterval = null; alert("Hoàn thành Pomodoro!"); }
+            }, 1000);
+        }
+        function pausePomo() { clearInterval(pomoInterval); pomoInterval = null; }
+        function resetPomo() { pausePomo(); pomoSeconds = 25 * 60; updatePomoDisplay(); }
+        updatePomoDisplay();
+
+        let testSeconds = 45 * 60, testInterval = null;
+        function setTestTimer() {
+            testSeconds = (parseInt(document.getElementById('test-mins').value) || 45) * 60;
+            updateTestDisplay();
+        }
+        function updateTestDisplay() {
+            const m = Math.floor(testSeconds / 60), s = testSeconds % 60;
+            document.getElementById('test-display').innerText = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+        }
+        function startTest() {
+            if (testInterval) return;
+            testInterval = setInterval(() => {
+                if (testSeconds > 0) { testSeconds--; updateTestDisplay(); }
+                else { clearInterval(testInterval); testInterval = null; }
+            }, 1000);
+        }
+        function pauseTest() { clearInterval(testInterval); testInterval = null; }
+        function resetTest() { pauseTest(); setTestTimer(); }
+        updateTestDisplay();
+
+        let swSeconds = 0, swInterval = null;
+        function updateSWDisplay() {
+            const h = Math.floor(swSeconds / 3600), m = Math.floor((swSeconds % 3600) / 60), s = swSeconds % 60;
+            document.getElementById('sw-display').innerText = `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+        }
+        function startSW() { if (!swInterval) swInterval = setInterval(() => { swSeconds++; updateSWDisplay(); }, 1000); }
+        function pauseSW() { clearInterval(swInterval); swInterval = null; }
+        function resetSW() { pauseSW(); swSeconds = 0; updateSWDisplay(); }
+
+        // CẢNH NỀN & CHUYỂN GIAO DIỆN
+        function changeBg(url) {
+            const bodyEl = document.getElementById('app-body');
+            bodyEl.style.backgroundImage = `url('${url}')`;
+            bodyEl.classList.add('has-custom-bg');
+            localStorage.setItem('savedBg', url);
+        }
+        function removeBg() {
+            const bodyEl = document.getElementById('app-body');
+            bodyEl.style.backgroundImage = 'none';
+            bodyEl.classList.remove('has-custom-bg');
+            localStorage.removeItem('savedBg');
+        }
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) { changeBg(e.target.result); }
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // GHI CHÚ
+        let notesData = JSON.parse(localStorage.getItem('myMultiNotes')) || [{ id: 1, title: 'Hóa hữu cơ', content: '- Ankan, Anken' }];
+        function renderNotes() {
+            const container = document.getElementById('notes-list');
+            container.innerHTML = '';
+            notesData.forEach((note, index) => {
+                container.innerHTML += `
+                    <div class="note-card">
+                        <div class="note-header">
+                            <input type="text" class="note-title-input" value="${note.title}" oninput="notesData[${index}].title=this.value; localStorage.setItem('myMultiNotes', JSON.stringify(notesData));">
+                            <button class="btn-del-note" onclick="notesData.splice(${index},1); renderNotes();"><i class="fa-solid fa-trash-can"></i></button>
+                        </div>
+                        <textarea class="note-textarea" oninput="notesData[${index}].content=this.value; localStorage.setItem('myMultiNotes', JSON.stringify(notesData));">${note.content}</textarea>
+                    </div>
+                `;
+            });
+            localStorage.setItem('myMultiNotes', JSON.stringify(notesData));
+        }
+        function addNote() { notesData.push({ id: Date.now(), title: 'Ghi chú mới', content: '' }); renderNotes(); }
+        renderNotes();
+
+        // KANBAN LỊCH HỌC
+        const days = ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'Chủ Nhật'];
+        let scheduleData = JSON.parse(localStorage.getItem('mySchedule')) || { 'Thứ 2': [{ text: 'Làm bài tập Hóa', done: false }] };
+        function renderSchedule() {
+            const board = document.getElementById('kanban-board');
+            board.innerHTML = '';
+            days.forEach(day => {
+                const tasksHtml = (scheduleData[day] || []).map((task, index) => `
+                    <div class="kanban-task ${task.done ? 'done' : ''}" onclick="scheduleData['${day}'][${index}].done = !scheduleData['${day}'][${index}].done; renderSchedule();">
+                        <span>${task.text}</span>
+                        <i class="fa-solid fa-trash-can" onclick="event.stopPropagation(); scheduleData['${day}'].splice(${index},1); renderSchedule();"></i>
+                    </div>
+                `).join('');
+                board.innerHTML += `
+                    <div class="kanban-col">
+                        <div class="kanban-header"><span>${day}</span><span>${(scheduleData[day] || []).length} thẻ</span></div>
+                        <div class="kanban-tasks">${tasksHtml}</div>
+                        <button class="add-task-btn" onclick="showCustomPrompt('Thêm mục tiêu cho ${day}:','', val => { if(val){ if(!scheduleData['${day}']) scheduleData['${day}']=[]; scheduleData['${day}'].push({text:val, done:false}); renderSchedule(); } })"><i class="fa-solid fa-plus"></i> Thêm mục tiêu</button>
+                    </div>
+                `;
+            });
+            localStorage.setItem('mySchedule', JSON.stringify(scheduleData));
+        }
+        renderSchedule();
+    </script>
+</body>
+</html>

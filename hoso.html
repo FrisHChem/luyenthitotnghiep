@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hồ Sơ Cá Nhân - Hệ Thống Ôn Thi THPT</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: #f8fafc; color: #1e293b; min-height: 100vh; padding-bottom: 50px; }
+
+        /* Thanh điều hướng */
+        .top-navbar {
+            background: #ffffff; border-bottom: 1px solid #e2e8f0; padding: 16px 40px;
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03); margin-bottom: 30px;
+        }
+        .nav-brand { display: flex; align-items: center; gap: 12px; font-size: 18px; font-weight: 800; color: #2563eb; text-decoration: none; }
+        .nav-links { display: flex; gap: 16px; align-items: center; }
+        .nav-btn {
+            background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; padding: 10px 20px;
+            border-radius: 12px; font-weight: 600; font-size: 14px; cursor: pointer;
+            display: flex; align-items: center; gap: 8px; text-decoration: none; transition: 0.2s;
+        }
+        .nav-btn:hover, .nav-btn.active {
+            background: #2563eb; color: white; border-color: #2563eb;
+        }
+
+        .main-container { max-width: 800px; margin: 0 auto; padding: 0 20px; }
+
+        /* Thẻ hồ sơ */
+        .profile-card {
+            background: #ffffff; border: 1px solid #e2e8f0; border-radius: 20px; padding: 35px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+        }
+        .profile-header { font-size: 22px; font-weight: 800; color: #0f172a; margin-bottom: 25px; display: flex; align-items: center; gap: 10px; }
+        .profile-header i { color: #2563eb; }
+
+        .avatar-section { display: flex; align-items: center; gap: 20px; margin-bottom: 25px; }
+        .avatar-preview {
+            width: 70px; height: 70px; border-radius: 50%; background: #2563eb; color: white;
+            display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: 700;
+            overflow: hidden; border: 2px solid #e2e8f0; flex-shrink: 0;
+        }
+
+        .form-group { margin-bottom: 20px; }
+        .form-label { display: block; font-weight: 600; font-size: 14px; color: #334155; margin-bottom: 8px; }
+        .form-control {
+            width: 100%; padding: 12px 16px; border: 1px solid #cbd5e1; border-radius: 10px;
+            font-size: 14px; color: #0f172a; outline: none; transition: 0.2s; background: #fff;
+        }
+        .form-control:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+
+        .btn-save {
+            background: #2563eb; color: white; border: none; width: 100%; padding: 14px;
+            border-radius: 12px; font-weight: 700; font-size: 15px; cursor: pointer; transition: 0.2s;
+            box-shadow: 0 4px 15px rgba(37,99,235,0.25); margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .btn-save:hover { background: #1d4ed8; }
+    </style>
+</head>
+<body>
+
+    <!-- Thanh điều hướng -->
+    <div class="top-navbar">
+        <a href="index.html" class="nav-brand"><i class="fa-solid fa-graduation-cap"></i> Hệ Thống Ôn Thi THPT</a>
+        <div class="nav-links">
+            <a href="index.html" class="nav-btn"><i class="fa-solid fa-house"></i> Trang chủ</a>
+            <a href="hoso.html" class="nav-btn active"><i class="fa-solid fa-user"></i> Hồ sơ</a>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="profile-card">
+            <div class="profile-header"><i class="fa-solid fa-user-pen"></i> Thiết Lập Thông Tin Tài Khoản</div>
+            
+            <!-- Phần ảnh đại diện -->
+            <div class="avatar-section">
+                <div id="avatar-preview-box" class="avatar-preview">U</div>
+                <div>
+                    <label class="form-label" style="cursor: pointer; color: #2563eb; display: inline-block; margin-bottom: 4px;">
+                        <i class="fa-solid fa-camera"></i> Tải ảnh đại diện lên
+                        <input type="file" id="avatarInput" accept="image/*" style="display: none;" onchange="previewAvatar(event)">
+                    </label>
+                    <div style="font-size: 12px; color: #64748b;">Hỗ trợ định dạng JPG, PNG hoặc GIF.</div>
+                </div>
+            </div>
+
+            <!-- Form thông tin -->
+            <form id="profileForm" onsubmit="saveProfile(event)">
+                <div class="form-group">
+                    <label class="form-label">Tên đăng nhập</label>
+                    <input type="text" id="userNameInput" class="form-control" placeholder="Nhập tên đăng nhập (ví dụ: nguyenbaongoc)..." required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Họ và tên</label>
+                    <input type="text" id="userFullNameInput" class="form-control" placeholder="Nhập họ và tên đầy đủ..." required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Email liên hệ</label>
+                    <input type="email" id="userEmailInput" class="form-control" placeholder="Nhập địa chỉ email...">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Số điện thoại</label>
+                    <input type="tel" id="userPhoneInput" class="form-control" placeholder="Nhập số điện thoại...">
+                </div>
+
+                <button type="submit" class="btn-save"><i class="fa-solid fa-floppy-disk"></i> Lưu Hồ Sơ & Cập Nhật</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let base64Avatar = '';
+
+        // Tải dữ liệu cũ lên form nếu đã có trong localStorage
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedUserName = localStorage.getItem('userName') || '';
+            const savedFullName = localStorage.getItem('userFullName') || '';
+            const savedEmail = localStorage.getItem('userEmail') || '';
+            const savedPhone = localStorage.getItem('userPhone') || '';
+            const savedAvatar = localStorage.getItem('userAvatar');
+
+            if (savedUserName) document.getElementById('userNameInput').value = savedUserName;
+            if (savedFullName) document.getElementById('userFullNameInput').value = savedFullName;
+            if (savedEmail) document.getElementById('userEmailInput').value = savedEmail;
+            if (savedPhone) document.getElementById('userPhoneInput').value = savedPhone;
+
+            if (savedAvatar) {
+                base64Avatar = savedAvatar;
+                document.getElementById('avatar-preview-box').innerHTML = `<img src="${savedAvatar}" style="width:100%; height:100%; object-fit:cover;">`;
+            } else if (savedFullName || savedUserName) {
+                const name = savedFullName || savedUserName;
+                document.getElementById('avatar-preview-box').innerText = name.trim().charAt(0).toUpperCase();
+            }
+        });
+
+        // Xử lý xem trước ảnh đại diện
+        function previewAvatar(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    base64Avatar = e.target.result;
+                    document.getElementById('avatar-preview-box').innerHTML = `<img src="${base64Avatar}" style="width:100%; height:100%; object-fit:cover;">`;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Lưu thông tin vào localStorage và chuyển về trang chủ
+        function saveProfile(e) {
+            e.preventDefault();
+            const userName = document.getElementById('userNameInput').value.trim();
+            const userFullName = document.getElementById('userFullNameInput').value.trim();
+            const userEmail = document.getElementById('userEmailInput').value.trim();
+            const userPhone = document.getElementById('userPhoneInput').value.trim();
+
+            localStorage.setItem('userName', userName);
+            localStorage.setItem('userFullName', userFullName);
+            if (userEmail) localStorage.setItem('userEmail', userEmail);
+            if (userPhone) localStorage.setItem('userPhone', userPhone);
+            if (base64Avatar) localStorage.setItem('userAvatar', base64Avatar);
+
+            alert("Đã lưu hồ sơ thành công!");
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>
