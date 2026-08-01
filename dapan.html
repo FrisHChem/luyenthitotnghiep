@@ -161,69 +161,7 @@
             btn.classList.add('active');
         }
 
-        // 1. RENDER ĐÁP ÁN CHI TIẾT
-        function renderAnswers() {
-            const history = JSON.parse(localStorage.getItem('userExamHistory') || '[]');
-            const lastExam = history.length > 0 ? history[history.length - 1] : null;
-            const activeExamId = localStorage.getItem('activeExamId') || 'toan-01';
-            const currentExam = (typeof ALL_EXAMS !== 'undefined' && ALL_EXAMS[activeExamId]) ? ALL_EXAMS[activeExamId] : {};
-
-            document.getElementById('examTitle').innerText = currentExam.title || "Chi Tiết Đáp Án";
-            document.getElementById('scoreText').innerText = lastExam ? lastExam.score.toFixed(1) : "0.0";
-
-            const container = document.getElementById('answersList');
-            container.innerHTML = '';
-
-            if(!lastExam) {
-                container.innerHTML = `<div class="empty-state"><i class="fa-solid fa-pen-to-square"></i><p>Bạn chưa hoàn thành bài thi nào!</p></div>`;
-                return;
-            }
-
-            const userAns = lastExam.userAnswers || {};
-            const correctAns = currentExam.answers?.part1 || currentExam.answers || {};
-            const totalQ = currentExam.part1Total || 12;
-
-            for (let i = 1; i <= totalQ; i++) {
-                const uChoice = userAns[i];
-                const cChoice = correctAns[i];
-                const isCorrect = (uChoice !== undefined && uChoice === cChoice);
-
-                container.innerHTML += `
-                    <div class="answer-card ${isCorrect ? 'correct' : 'wrong'}">
-                        <div class="card-header">
-                            <div class="q-title">Câu ${i}</div>
-                            <span style="font-size: 12px; font-weight: 700; color: ${isCorrect ? '#16a34a' : '#dc2626'};">
-                                ${isCorrect ? '✓ Đúng' : '✗ Sai'}
-                            </span>
-                        </div>
-                        <div class="answers-comparison">
-                            <div>Bạn chọn: <b style="color:${isCorrect ? '#16a34a' : '#dc2626'};">${uChoice !== undefined ? letters[uChoice] : 'Chưa chọn'}</b></div>
-                            <div>Đáp án đúng: <b style="color:#16a34a;">${cChoice !== undefined ? letters[cChoice] : 'A'}</b></div>
-                        </div>
-
-                        <button class="btn-toggle-solution" onclick="toggleSolution(${i})">
-                            <i class="fa-solid fa-chevron-down" id="icon-${i}"></i> Xem lời giải chi tiết
-                        </button>
-
-                        <div class="solution-box" id="sol-${i}">
-                            <b>Hướng dẫn giải:</b> Áp dụng công thức và định lý cơ bản để biến đổi phương trình, ta suy ra đáp án chuẩn xác là <b>${cChoice !== undefined ? letters[cChoice] : 'A'}</b>.
-                        </div>
-                    </div>
-                `;
-            }
-        }
-
-        function toggleSolution(id) {
-            const box = document.getElementById(`sol-${id}`);
-            const icon = document.getElementById(`icon-${id}`);
-            if (box.style.display === 'block') {
-                box.style.display = 'none';
-                icon.className = 'fa-solid fa-chevron-down';
-            } else {
-                box.style.display = 'block';
-                icon.className = 'fa-solid fa-chevron-up';
-            }
-        }
+        
 
         // 2. RENDER BẢNG XẾP HẠNG THỰC TẾ THEO TÀI KHOẢN ĐĂNG NHẬP
         function renderRealRank() {
