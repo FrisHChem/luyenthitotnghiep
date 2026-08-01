@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Phòng Thi Trực Tuyến - Hệ Thống Ôn Thi THPT Quốc Gia</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Thư viện PDF.js render PDF thành Canvas -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 
     <style>
@@ -19,7 +17,6 @@
         }
         body.dark-mode { background-color: #0f172a; color: #f8fafc; }
 
-        /* TOPBAR */
         .exam-topbar {
             background: #ffffff; border-bottom: 1px solid #e2e8f0; height: 50px; padding: 0 16px;
             display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; z-index: 100;
@@ -40,10 +37,8 @@
         body.dark-mode .btn-tool { background: #334155; border-color: #475569; color: #cbd5e1; }
         .btn-tool:hover { background: #e2e8f0; }
 
-        /* LAYOUT 2 CỘT */
         .exam-body { display: flex; height: calc(100vh - 50px); width: 100%; overflow: hidden; }
 
-        /* CỘT TRÁI: PDF VIEWER */
         .pdf-pane {
             flex: 1; background: #e2e8f0; display: flex; flex-direction: column; overflow-y: auto;
             align-items: center; padding: 15px; gap: 15px;
@@ -54,20 +49,17 @@
             max-width: 100%; height: auto !important;
         }
 
-        /* CỘT PHẢI: BẢNG LÀM BÀI */
         .dashboard-pane {
             width: 420px; background: #ffffff; border-left: 1px solid #e2e8f0;
             display: flex; flex-direction: column; flex-shrink: 0; z-index: 50;
         }
         body.dark-mode .dashboard-pane { background: #1e293b; border-color: #334155; }
 
-        /* ĐỒNG HỒ */
         .timer-box { padding: 12px; text-align: center; border-bottom: 1px solid #f1f5f9; }
         body.dark-mode .timer-box { border-color: #334155; }
         .timer-label { font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; }
         .timer-display { font-size: 28px; font-weight: 800; color: #2563eb; line-height: 1.1; margin-top: 2px; }
 
-        /* BẢN ĐỒ CÂU HỎI */
         .map-section { padding: 10px 16px; border-bottom: 1px solid #f1f5f9; background: #f8fafc; }
         body.dark-mode .map-section { background: rgba(0,0,0,0.15); border-color: #334155; }
         .map-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; font-size: 11px; font-weight: 700; color: #64748b; }
@@ -85,14 +77,12 @@
         .map-node.answered { background: #2563eb; color: white; border-color: #2563eb; }
         .map-node.flagged { background: #f59e0b; color: white; border-color: #f59e0b; }
 
-        /* KHU VỰC PHIẾU TRẢ LỜI */
         .answer-sheet { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 16px; }
         .section-box { border-bottom: 1px solid #e2e8f0; padding-bottom: 12px; }
         body.dark-mode .section-box { border-color: #334155; }
         .section-title { font-size: 13px; font-weight: 700; color: #0f172a; margin-bottom: 10px; background: #f1f5f9; padding: 6px 10px; border-radius: 6px; }
         body.dark-mode .section-title { background: #334155; color: #f8fafc; }
 
-        /* PHẦN I: TRẮC NGHIỆM 4 LỰA CHỌN */
         .p1-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
         .q-info { display: flex; align-items: center; gap: 6px; font-weight: 700; font-size: 12px; color: #334155; width: 40px; }
         body.dark-mode .q-info { color: #cbd5e1; }
@@ -107,7 +97,6 @@
         body.dark-mode .opt-bubble { background: #1e293b; border-color: #475569; color: #94a3b8; }
         .opt-bubble.selected { background: #2563eb; color: white; border-color: #2563eb; }
 
-        /* PHẦN II: ĐÚNG / SAI */
         .p2-item { margin-bottom: 12px; background: #f8fafc; padding: 8px; border-radius: 8px; border: 1px solid #e2e8f0; }
         body.dark-mode .p2-item { background: rgba(0,0,0,0.1); border-color: #334155; }
         .p2-header { font-size: 12px; font-weight: 700; margin-bottom: 6px; display: flex; justify-content: space-between; }
@@ -122,15 +111,6 @@
         .tf-btn.selected-t { background: #16a34a; color: white; border-color: #16a34a; }
         .tf-btn.selected-f { background: #dc2626; color: white; border-color: #dc2626; }
 
-        /* PHẦN III: TRẢ LỜI NGẮN */
-        .p3-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
-        .p3-input {
-            width: 140px; padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 6px;
-            font-size: 13px; font-weight: 600; text-align: center; background: #fff; color: #1e293b;
-        }
-        body.dark-mode .p3-input { background: #1e293b; border-color: #475569; color: #fff; }
-
-        /* FOOTER NỘP BÀI */
         .submit-panel { padding: 12px 16px; background: #ffffff; border-top: 1px solid #e2e8f0; }
         body.dark-mode .submit-panel { background: #1e293b; border-color: #334155; }
         .btn-submit {
@@ -139,7 +119,6 @@
         }
         .btn-submit:hover { background: #15803d; }
 
-        /* MODAL KẾT QUẢ */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px);
@@ -156,7 +135,6 @@
 
     <script src="exams-data.js"></script>
 
-    <!-- TOPBAR -->
     <div class="exam-topbar">
         <div class="topbar-left">
             <a href="luyende.html" class="btn-exit"><i class="fa-solid fa-arrow-left"></i> Thoát</a>
@@ -169,12 +147,9 @@
         </div>
     </div>
 
-    <!-- MAIN BODY -->
     <div class="exam-body">
-        <!-- Cột trái: PDF Canvas -->
         <div class="pdf-pane" id="pdfPane"></div>
 
-        <!-- Cột phải: Bảng điều khiển & Phiếu trả lời đầy đủ 3 phần -->
         <div class="dashboard-pane">
             <div class="timer-box">
                 <div class="timer-label">THỜI GIAN CÒN LẠI</div>
@@ -193,20 +168,13 @@
             </div>
 
             <div class="answer-sheet" id="answerSheet">
-                <!-- Phần I -->
-                <div class="section-box">
+                <div class="section-box" id="part1Box">
                     <div class="section-title">Phần I. Trắc nghiệm nhiều phương án lựa chọn</div>
                     <div id="part1Container"></div>
                 </div>
-                <!-- Phần II -->
-                <div class="section-box">
+                <div class="section-box" id="part2Box">
                     <div class="section-title">Phần II. Trắc nghiệm đúng / sai</div>
                     <div id="part2Container"></div>
-                </div>
-                <!-- Phần III -->
-                <div class="section-box">
-                    <div class="section-title">Phần III. Trắc nghiệm trả lời ngắn</div>
-                    <div id="part3Container"></div>
                 </div>
             </div>
 
@@ -216,13 +184,12 @@
         </div>
     </div>
 
-    <!-- Modal Kết quả -->
     <div id="resultModal" class="modal-overlay">
         <div class="modal-card">
             <h2>Kết Quả Bài Thi</h2>
-            <div id="scoreDisplay" style="font-size: 42px; font-weight: 800; color: #16a34a; margin: 15px 0;">0/10</div>
+            <div id="scoreDisplay" style="font-size: 42px; font-weight: 800; color: #16a34a; margin: 15px 0;">0.00 đ</div>
             <p id="scoreDetails" style="color: #64748b; margin-bottom: 20px; font-size: 14px;"></p>
-            <button class="btn-submit" onclick="window.location.href='luyende.html'">Xác nhận</button>
+            <button class="btn-submit" id="btnConfirmSubmit">Xem Đáp Án & Bảng Xếp Hạng</button>
         </div>
     </div>
 
@@ -231,13 +198,20 @@
 
         const activeExamId = localStorage.getItem('activeExamId') || 'toan-01';
         const currentExam = (typeof ALL_EXAMS !== 'undefined' && ALL_EXAMS[activeExamId]) ? ALL_EXAMS[activeExamId] : {
-            title: "Đề thi mẫu THPT",
+            title: "Test: Khảo sát hàm số & Cực trị - Toán 12",
             duration: 90,
             pdfUrl: "ddmaxmindvd.pdf",
-            part1Total: 12,
+            part1Total: 24,
             part2Total: 4,
-            part3Total: 6,
-            answers: { part1: {}, part2: {}, part3: {} }
+            answers: {
+                part1: { 1: 0, 2: 1, 3: 3, 4: 2, 5: 3, 6: 1, 7: 2, 8: 1, 9: 1, 10: 2, 11: 3, 12: 2, 13: 0, 14: 0, 15: 2, 16: 2, 17: 3, 18: 1, 19: 0, 20: 0, 21: 2, 22: 2, 23: 1, 24: 1 },
+                part2: {
+                    25: {a: false, b: true, c: false, d: false},
+                    26: {a: true, b: false, c: false, d: true},
+                    27: {a: true, b: false, c: true, d: false},
+                    28: {a: true, b: false, c: false, d: true}
+                }
+            }
         };
 
         document.getElementById('examTitle').innerText = currentExam.title;
@@ -273,102 +247,95 @@
             renderPDF();
         }
 
-        // LƯU TRỮ TRẠNG THÁI LÀM BÀI
+        // LƯU DỮ LIỆU BÀI LÀM
         const studentAnswers = {
             part1: {},
-            part2: { 1: {}, 2: {}, 3: {}, 4: {} },
-            part3: {}
+            part2: {}
         };
         const flaggedQuestions = {};
 
-        // KHỞI TẠO GIAO DIỆN CÁC PHẦN
         function initUI() {
             const mapGrid = document.getElementById('mapGrid');
             const p1Container = document.getElementById('part1Container');
             const p2Container = document.getElementById('part2Container');
-            const p3Container = document.getElementById('part3Container');
 
             mapGrid.innerHTML = '';
             p1Container.innerHTML = '';
             p2Container.innerHTML = '';
-            p3Container.innerHTML = '';
 
-            let totalQCount = currentExam.part1Total + currentExam.part2Total + currentExam.part3Total;
+            const p1Total = currentExam.part1Total || 0;
+            const p2Total = currentExam.part2Total || 0;
+            let totalQCount = p1Total + p2Total;
 
-            // Tạo Bản đồ câu hỏi tổng hợp
             for (let i = 1; i <= totalQCount; i++) {
                 mapGrid.innerHTML += `<div class="map-node" id="node-${i}">${i}</div>`;
             }
 
-            // Phần I: 4 lựa chọn
-            for (let i = 1; i <= currentExam.part1Total; i++) {
-                let opts = ['A', 'B', 'C', 'D'].map((letter, idx) => `
-                    <div class="opt-bubble" id="p1-${i}-${idx}" onclick="selectP1(${i}, ${idx})">${letter}</div>
-                `).join('');
+            // Render Phần I
+            if (p1Total > 0) {
+                for (let i = 1; i <= p1Total; i++) {
+                    let opts = ['A', 'B', 'C', 'D'].map((letter, idx) => `
+                        <div class="opt-bubble" id="p1-${i}-${idx}" onclick="selectP1(${i}, ${idx})">${letter}</div>
+                    `).join('');
 
-                p1Container.innerHTML += `
-                    <div class="p1-row">
-                        <div class="q-info">
-                            <i class="fa-solid fa-flag btn-flag" id="flag-${i}" onclick="toggleFlag(${i})"></i>
-                            <span>${i}.</span>
+                    p1Container.innerHTML += `
+                        <div class="p1-row">
+                            <div class="q-info">
+                                <i class="fa-solid fa-flag btn-flag" id="flag-${i}" onclick="toggleFlag(${i})"></i>
+                                <span>${i}.</span>
+                            </div>
+                            <div class="options-group">${opts}</div>
                         </div>
-                        <div class="options-group">${opts}</div>
-                    </div>
-                `;
+                    `;
+                }
+            } else {
+                document.getElementById('part1Box').style.display = 'none';
             }
 
-            // Phần II: Đúng / Sai (4 ý a, b, c, d)
-            for (let i = 1; i <= currentExam.part2Total; i++) {
-                let globalIdx = currentExam.part1Total + i;
-                let statements = ['a', 'b', 'c', 'd'].map(sub => `
-                    <div class="p2-sub-row">
-                        <span>Ý ${sub})</span>
-                        <div class="p2-tf-group">
-                            <div class="tf-btn" id="p2-${i}-${sub}-T" onclick="selectP2(${i}, '${sub}', true)">Đ</div>
-                            <div class="tf-btn" id="p2-${i}-${sub}-F" onclick="selectP2(${i}, '${sub}', false)">S</div>
+            // Render Phần II
+            if (p2Total > 0 && currentExam.answers && currentExam.answers.part2) {
+                const qKeys = Object.keys(currentExam.answers.part2);
+                qKeys.forEach((qNum, idx) => {
+                    let globalIdx = p1Total + idx + 1;
+                    let statements = ['a', 'b', 'c', 'd'].map(sub => `
+                        <div class="p2-sub-row">
+                            <span>Ý ${sub})</span>
+                            <div class="p2-tf-group">
+                                <div class="tf-btn" id="p2-${qNum}-${sub}-T" onclick="selectP2('${qNum}', '${sub}', true)">Đ</div>
+                                <div class="tf-btn" id="p2-${qNum}-${sub}-F" onclick="selectP2('${qNum}', '${sub}', false)">S</div>
+                            </div>
                         </div>
-                    </div>
-                `).join('');
+                    `).join('');
 
-                p2Container.innerHTML += `
-                    <div class="p2-item">
-                        <div class="p2-header">
-                            <span>Câu ${i}</span>
-                            <i class="fa-solid fa-flag btn-flag" id="flag-${globalIdx}" onclick="toggleFlag(${globalIdx})"></i>
+                    p2Container.innerHTML += `
+                        <div class="p2-item">
+                            <div class="p2-header">
+                                <span>Câu ${qNum}</span>
+                                <i class="fa-solid fa-flag btn-flag" id="flag-${globalIdx}" onclick="toggleFlag(${globalIdx})"></i>
+                            </div>
+                            <div class="p2-statements">${statements}</div>
                         </div>
-                        <div class="p2-statements">${statements}</div>
-                    </div>
-                `;
-            }
-
-            // Phần III: Trả lời ngắn
-            for (let i = 1; i <= currentExam.part3Total; i++) {
-                let globalIdx = currentExam.part1Total + currentExam.part2Total + i;
-                p3Container.innerHTML += `
-                    <div class="p3-row">
-                        <div class="q-info">
-                            <i class="fa-solid fa-flag btn-flag" id="flag-${globalIdx}" onclick="toggleFlag(${globalIdx})"></i>
-                            <span>C${i}.</span>
-                        </div>
-                        <input type="text" class="p3-input" id="p3-${i}" placeholder="Nhập đáp án..." oninput="selectP3(${i}, this.value)">
-                    </div>
-                `;
+                    `;
+                });
+            } else {
+                document.getElementById('part2Box').style.display = 'none';
             }
         }
 
-        // XỬ LÝ CHỌN ĐÁP ÁN PHẦN I
         function selectP1(qNum, optIdx) {
             for (let i = 0; i < 4; i++) {
-                document.getElementById(`p1-${qNum}-${i}`).classList.remove('selected');
+                const el = document.getElementById(`p1-${qNum}-${i}`);
+                if (el) el.classList.remove('selected');
             }
             document.getElementById(`p1-${qNum}-${optIdx}`).classList.add('selected');
             studentAnswers.part1[qNum] = optIdx;
             updateMapNode(qNum);
         }
 
-        // XỬ LÝ CHỌN ĐÁP ÁN PHẦN II
         function selectP2(qNum, subKey, isTrue) {
+            if (!studentAnswers.part2[qNum]) studentAnswers.part2[qNum] = {};
             studentAnswers.part2[qNum][subKey] = isTrue;
+
             const btnT = document.getElementById(`p2-${qNum}-${subKey}-T`);
             const btnF = document.getElementById(`p2-${qNum}-${subKey}-F`);
             
@@ -379,15 +346,13 @@
                 btnF.className = 'tf-btn selected-f';
                 btnT.className = 'tf-btn';
             }
-            let globalIdx = currentExam.part1Total + qNum;
-            updateMapNode(globalIdx);
-        }
-
-        // XỬ LÝ NHẬP ĐÁP ÁN PHẦN III
-        function selectP3(qNum, val) {
-            studentAnswers.part3[qNum] = val.trim();
-            let globalIdx = currentExam.part1Total + currentExam.part2Total + qNum;
-            updateMapNode(globalIdx);
+            
+            const p1Total = currentExam.part1Total || 0;
+            const qKeys = Object.keys(currentExam.answers.part2 || {});
+            const idxInP2 = qKeys.indexOf(qNum.toString());
+            if (idxInP2 !== -1) {
+                updateMapNode(p1Total + idxInP2 + 1);
+            }
         }
 
         function toggleFlag(globalIdx) {
@@ -398,17 +363,20 @@
 
         function updateMapNode(globalIdx) {
             const node = document.getElementById(`node-${globalIdx}`);
+            if(!node) return;
             node.className = 'map-node';
             
             let isAnswered = false;
-            if(globalIdx <= currentExam.part1Total) {
+            const p1Total = currentExam.part1Total || 0;
+
+            if(globalIdx <= p1Total) {
                 isAnswered = studentAnswers.part1[globalIdx] !== undefined;
-            } else if(globalIdx <= currentExam.part1Total + currentExam.part2Total) {
-                let p2Num = globalIdx - currentExam.part1Total;
-                isAnswered = Object.keys(studentAnswers.part2[p2Num]).length > 0;
             } else {
-                let p3Num = globalIdx - currentExam.part1Total - currentExam.part2Total;
-                isAnswered = studentAnswers.part3[p3Num] !== "" && studentAnswers.part3[p3Num] !== undefined;
+                const qKeys = Object.keys(currentExam.answers.part2 || {});
+                const qNum = qKeys[globalIdx - p1Total - 1];
+                if (qNum && studentAnswers.part2[qNum]) {
+                    isAnswered = Object.keys(studentAnswers.part2[qNum]).length > 0;
+                }
             }
 
             if(isAnswered) node.classList.add('answered');
@@ -416,7 +384,7 @@
         }
 
         // ĐỒNG HỒ ĐẾM NGƯỢC
-        let timeLeft = currentExam.duration * 60;
+        let timeLeft = (currentExam.duration || 90) * 60;
         const timer = setInterval(() => {
             if (timeLeft > 0) {
                 timeLeft--;
@@ -430,45 +398,79 @@
             }
         }, 1000);
 
-        // NỘP BÀI & CHẤM ĐIỂM
+        // NỘP BÀI VÀ CHẤM ĐIỂM
         function submitExam() {
-    clearInterval(timer);
-    
-    // Tính toán số câu trắc nghiệm đúng
-    let correctCount = 0;
-    const correctAns = currentExam.answers?.part1 || currentExam.answers || {};
-    const totalP1 = currentExam.part1Total || 12;
+            clearInterval(timer);
+            
+            const p1PointPerQ = 0.25; 
+            const p2ScoringMap = { 1: 0.1, 2: 0.25, 3: 0.5, 4: 1.0 }; 
 
-    for (let i = 1; i <= totalP1; i++) {
-        if (studentAnswers.part1[i] !== undefined && studentAnswers.part1[i] === correctAns[i]) {
-            correctCount++;
+            let totalScore = 0;
+            let p1CorrectCount = 0;
+            const correctAns = currentExam.answers || {};
+            
+            // Chấm Phần I
+            const totalP1 = currentExam.part1Total || 0;
+            if (totalP1 > 0 && correctAns.part1) {
+                for (let i = 1; i <= totalP1; i++) {
+                    const userChoice = studentAnswers.part1 ? studentAnswers.part1[i] : undefined;
+                    if (userChoice !== undefined && userChoice === correctAns.part1[i]) {
+                        p1CorrectCount++;
+                    }
+                }
+                totalScore += p1CorrectCount * p1PointPerQ;
+            }
+
+            // Chấm Phần II
+            const totalP2 = currentExam.part2Total || 0;
+            if (totalP2 > 0 && correctAns.part2) {
+                Object.keys(correctAns.part2).forEach(qNum => {
+                    const correctObj = correctAns.part2[qNum];
+                    const userObj = (studentAnswers.part2 && studentAnswers.part2[qNum]) ? studentAnswers.part2[qNum] : {};
+                    let correctSubCount = 0;
+                    
+                    ['a', 'b', 'c', 'd'].forEach(subKey => {
+                        if (userObj[subKey] !== undefined && userObj[subKey] === correctObj[subKey]) {
+                            correctSubCount++;
+                        }
+                    });
+
+                    totalScore += p2ScoringMap[correctSubCount] || 0;
+                });
+            }
+
+            // Lưu bài làm vào LocalStorage
+            const currentUser = localStorage.getItem('currentUser') || 'Nguyễn Bảo Ngọc';
+            const examRecord = {
+                examId: activeExamId,
+                score: totalScore,
+                userAnswers: studentAnswers,
+                date: new Date().toISOString()
+            };
+
+            const userHistory = JSON.parse(localStorage.getItem('userExamHistory') || '[]');
+            userHistory.push(examRecord);
+            localStorage.setItem('userExamHistory', JSON.stringify(userHistory));
+
+            const allUsersLeaderboard = JSON.parse(localStorage.getItem('allUsersLeaderboard') || '{}');
+            if (!allUsersLeaderboard[currentUser]) {
+                allUsersLeaderboard[currentUser] = [];
+            }
+            allUsersLeaderboard[currentUser].push(examRecord);
+            localStorage.setItem('allUsersLeaderboard', JSON.stringify(allUsersLeaderboard));
+
+            // Hiển thị Modal
+            document.getElementById('scoreDisplay').innerText = `${totalScore.toFixed(2)} đ`;
+            document.getElementById('scoreDetails').innerText = `Phần I làm đúng ${p1CorrectCount}/${totalP1} câu.`;
+            
+            const confirmBtn = document.getElementById('btnConfirmSubmit');
+            confirmBtn.onclick = function() {
+                window.location.href = 'dapan.html';
+            };
+
+            document.getElementById('resultModal').style.display = 'flex';
         }
-    }
-    
-    let calculatedScore = (correctCount / totalP1) * 10;
 
-    // Lưu kết quả bài làm vào LocalStorage
-    const history = JSON.parse(localStorage.getItem('userExamHistory') || '[]');
-    history.push({
-        examId: activeExamId,
-        score: calculatedScore,
-        userAnswers: studentAnswers.part1,
-        date: new Date().toISOString()
-    });
-    localStorage.setItem('userExamHistory', JSON.stringify(history));
-
-    // Hiển thị modal thông báo và điều hướng tới dapan.html
-    document.getElementById('scoreDisplay').innerText = `${calculatedScore.toFixed(1)} / 10 đ`;
-    document.getElementById('scoreDetails').innerText = `Bạn đã làm đúng ${correctCount}/${totalP1} câu trắc nghiệm.`;
-    
-    const confirmBtn = document.querySelector('#resultModal .btn-submit');
-    confirmBtn.innerText = "Xem Đáp Án & Bảng Xếp Hạng";
-    confirmBtn.onclick = function() {
-        window.location.href = 'dapan.html';
-    };
-
-    document.getElementById('resultModal').style.display = 'flex';
-}
         function toggleDarkMode() {
             document.body.classList.toggle('dark-mode');
         }

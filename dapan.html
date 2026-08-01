@@ -10,7 +10,6 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         body { background-color: #f8fafc; color: #1e293b; min-height: 100vh; padding-bottom: 50px; }
 
-        /* NAVBAR */
         .navbar {
             background: #ffffff; border-bottom: 1px solid #e2e8f0; padding: 12px 5%;
             display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100;
@@ -25,7 +24,6 @@
 
         .container { max-width: 950px; margin: 30px auto; padding: 0 20px; }
 
-        /* HEADER KẾT QUẢ */
         .score-summary-card {
             background: linear-gradient(135deg, #1e3a8a, #2563eb); color: white;
             border-radius: 20px; padding: 25px 30px; margin-bottom: 25px;
@@ -38,7 +36,6 @@
         }
         .score-num { font-size: 32px; font-weight: 800; }
 
-        /* TAB BAR */
         .tab-bar {
             display: flex; gap: 10px; background: #ffffff; padding: 6px; border-radius: 12px;
             border: 1px solid #e2e8f0; margin-bottom: 25px;
@@ -50,28 +47,18 @@
         }
         .tab-btn.active { background: #2563eb; color: #ffffff; box-shadow: 0 2px 8px rgba(37,99,235,0.2); }
 
-        /* CHI TIẾT ĐÁP ÁN */
+        .part-title { font-size: 15px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        .answers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
         .answer-card {
-            background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 18px;
-            margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
         }
-        .answer-card.correct { border-left: 5px solid #16a34a; }
-        .answer-card.wrong { border-left: 5px solid #dc2626; }
-        .card-header { display: flex; justify-content: space-between; align-items: center; }
-        .q-title { font-weight: 700; font-size: 15px; }
-        .answers-comparison { display: flex; gap: 20px; margin-top: 10px; font-size: 13px; font-weight: 600; }
+        .answer-card.correct { border-color: #bbf7d0; background: #f0fdf4; }
+        .answer-card.wrong { border-color: #fecaca; background: #fef2f2; }
 
-        .btn-toggle-solution {
-            background: none; border: none; color: #2563eb; font-size: 12px; font-weight: 700;
-            cursor: pointer; display: flex; align-items: center; gap: 5px; margin-top: 12px; padding: 0;
-        }
-        .btn-toggle-solution:hover { text-decoration: underline; }
-        .solution-box {
-            display: none; background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px;
-            padding: 12px 15px; font-size: 13px; color: #1e40af; margin-top: 10px; line-height: 1.5;
-        }
+        .answer-card-p2 { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 18px; }
 
-        /* BẢNG XẾP HẠNG THỰC TẾ */
         .rank-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; }
         .rank-table { width: 100%; border-collapse: collapse; text-align: left; }
         .rank-table th { background: #f8fafc; padding: 14px 20px; font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase; }
@@ -82,6 +69,28 @@
         .top-2 { background: #e2e8f0; color: #475569; }
         .top-3 { background: #ffedd5; color: #c2410c; }
         .top-other { background: #f1f5f9; color: #64748b; }
+
+        /* KHU VỰC TẢI FILE ĐÁP ÁN */
+        .file-list { display: flex; flex-direction: column; gap: 14px; margin-top: 10px; }
+        .file-item {
+            background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 18px 22px;
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02); transition: 0.2s;
+        }
+        .file-item:hover { border-color: #2563eb; transform: translateY(-1px); }
+        .file-actions { display: flex; gap: 10px; }
+        .btn-view {
+            background: #f1f5f9; color: #2563eb; border: 1px solid #cbd5e1; padding: 8px 16px; border-radius: 8px;
+            font-size: 13px; font-weight: 700; cursor: pointer; text-decoration: none; display: flex;
+            align-items: center; gap: 6px; transition: 0.2s;
+        }
+        .btn-view:hover { background: #e2e8f0; }
+        .btn-download {
+            background: #2563eb; color: white; border: none; padding: 8px 16px; border-radius: 8px;
+            font-size: 13px; font-weight: 700; cursor: pointer; text-decoration: none; display: flex;
+            align-items: center; gap: 6px; transition: 0.2s;
+        }
+        .btn-download:hover { background: #1d4ed8; }
 
         .empty-state { text-align: center; padding: 40px 20px; color: #64748b; }
         .empty-state i { font-size: 40px; margin-bottom: 10px; color: #cbd5e1; }
@@ -94,7 +103,6 @@
 
     <script src="exams-data.js"></script>
 
-    <!-- NAVBAR -->
     <div class="navbar">
         <a href="home.html" class="brand"><i class="fa-solid fa-graduation-cap"></i> Hệ Thống Ôn Thi THPT</a>
         <div class="nav-links">
@@ -105,34 +113,45 @@
     </div>
 
     <div class="container">
-        <!-- HEADER KẾT QUẢ -->
         <div class="score-summary-card">
             <div>
                 <h2 id="examTitle">Kết Quả Bài Thi</h2>
-                <p style="font-size: 13px; opacity: 0.85; margin-top: 4px;">Chi tiết bài làm thực tế của bạn</p>
+                <p style="font-size: 13px; opacity: 0.85; margin-top: 4px;" id="examDateText">Chi tiết bài làm thực tế của bạn</p>
             </div>
             <div class="score-circle">
-                <div class="score-num" id="scoreText">0.0</div>
+                <div class="score-num" id="scoreText">0.00</div>
                 <div style="font-size: 11px; font-weight: 700; color: #64748b;">ĐIỂM SỐ</div>
             </div>
         </div>
 
-        <!-- TABS CHUYỂN ĐỔI -->
         <div class="tab-bar">
             <button class="tab-btn active" onclick="switchTab('dapanTab', this)">
                 <i class="fa-solid fa-list-check"></i> Chi Tiết Đáp Án
+            </button>
+            <button class="tab-btn" onclick="switchTab('filesTab', this)">
+                <i class="fa-solid fa-file-pdf"></i> File Đáp Án PDF
             </button>
             <button class="tab-btn" onclick="switchTab('rankTab', this)">
                 <i class="fa-solid fa-trophy"></i> Bảng Xếp Hạng Thật
             </button>
         </div>
 
-        <!-- TAB 1: ĐÁP ÁN BÀI LÀM -->
+        <!-- TAB 1: CHI TIẾT ĐÁP ÁN BÀI LÀM -->
         <div class="tab-content active" id="dapanTab">
-            <div id="answersList"></div>
+            <div id="answers-container"></div>
         </div>
 
-        <!-- TAB 2: BẢNG XẾP HẠNG THỰC TẾ GIỮA CÁC TÀI KHOẢN -->
+        <!-- TAB 2: TẢI FILE ĐÁP ÁN RIÊNG -->
+        <div class="tab-content" id="filesTab">
+            <div style="margin-bottom: 16px;">
+                <h3 style="font-size: 16px; font-weight: 700; color: #0f172a;">Tải Về File Đáp Án Chi Tiết</h3>
+                <p style="font-size: 13px; color: #64748b; margin-top: 4px;">Tài liệu lời giải chi tiết file PDF chính thức được đính kèm cho đề thi này.</p>
+            </div>
+            
+            <div class="file-list" id="presetFilesContainer"></div>
+        </div>
+
+        <!-- TAB 3: BẢNG XẾP HẠNG THỰC TẾ -->
         <div class="tab-content" id="rankTab">
             <div class="rank-card">
                 <table class="rank-table">
@@ -152,6 +171,22 @@
     </div>
 
     <script>
+        // =========================================================================
+        // FILE ĐÁP ÁN ĐÃ ĐƯỢC CẤU HÌNH ĐÚNG TÊN 'dapanddmaxmindvd.pdf'
+        // =========================================================================
+        const ADMIN_ANSWER_FILES = [
+            {
+                id: "file-toan-01",
+                examId: "toan-01",
+                title: "Lời giải & Đáp án chi tiết: Khảo sát hàm số Toán 12",
+                note: "File PDF đáp án lời giải chi tiết chính thức",
+                fileUrl: "dapanddmaxmindvd.pdf", // Tên file PDF đáp án riêng của bạn
+                fileNameToDownload: "Dap-An-Chi-Tiet-Toan-12.pdf",
+                fileSize: "1.5 MB",
+                updatedDate: "01/08/2026"
+            }
+        ];
+
         const letters = ['A', 'B', 'C', 'D'];
 
         function switchTab(tabId, btn) {
@@ -161,20 +196,221 @@
             btn.classList.add('active');
         }
 
-        
+        // HÀM ÉP TRÌNH DUYỆT TẢI FILE VỀ NGAY
+        function downloadFileDirectly(fileUrl, fileName) {
+            fetch(fileUrl)
+                .then(response => {
+                    if(!response.ok) throw new Error("Không tìm thấy file " + fileUrl);
+                    return response.blob();
+                })
+                .then(blob => {
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = url;
+                    a.download = fileName || 'Dap-An-Chi-Tiet.pdf';
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    document.body.removeChild(a);
+                })
+                .catch(err => {
+                    // Mở fallback tải tự nhiên nếu chạy local
+                    const a = document.createElement('a');
+                    a.href = fileUrl;
+                    a.download = fileName;
+                    a.target = '_blank';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                });
+        }
 
-        // 2. RENDER BẢNG XẾP HẠNG THỰC TẾ THEO TÀI KHOẢN ĐĂNG NHẬP
+        // 1. RENDER ĐÁP ÁN BÀI LÀM
+        function renderAnswers() {
+            const history = JSON.parse(localStorage.getItem('userExamHistory') || '[]');
+            const container = document.getElementById('answers-container');
+            if (!container) return;
+
+            if (history.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fa-solid fa-folder-open"></i><br>Chưa có lịch sử làm bài thi nào!
+                    </div>`;
+                return;
+            }
+
+            const lastRecord = history[history.length - 1];
+            
+            let examData = null;
+            if (typeof ALL_EXAMS !== 'undefined') {
+                examData = ALL_EXAMS[lastRecord.examId] || ALL_EXAMS["toan-01"] || Object.values(ALL_EXAMS)[0];
+            }
+
+            if (!examData) {
+                examData = {
+                    title: "Test: Khảo sát hàm số & Cực trị - Toán 12",
+                    part1Total: 24,
+                    part2Total: 4,
+                    answers: {
+                        part1: { 1: 0, 2: 1, 3: 3, 4: 2, 5: 3, 6: 1, 7: 2, 8: 1, 9: 1, 10: 2, 11: 3, 12: 2, 13: 0, 14: 0, 15: 2, 16: 2, 17: 3, 18: 1, 19: 0, 20: 0, 21: 2, 22: 2, 23: 1, 24: 1 },
+                        part2: {
+                            25: {a: false, b: true, c: false, d: false},
+                            26: {a: true, b: false, c: false, d: true},
+                            27: {a: true, b: false, c: true, d: false},
+                            28: {a: true, b: false, c: false, d: true}
+                        }
+                    }
+                };
+            }
+
+            const userAnswers = lastRecord.userAnswers || { part1: {}, part2: {} };
+            const correctAnswers = examData.answers || {};
+
+            document.getElementById('examTitle').innerText = examData.title || "Kết Quả Bài Thi";
+            document.getElementById('scoreText').innerText = (lastRecord.score || 0).toFixed(2);
+            if(lastRecord.date) {
+                document.getElementById('examDateText').innerText = `Nộp bài lúc: ${new Date(lastRecord.date).toLocaleString('vi-VN')}`;
+            }
+
+            container.innerHTML = '';
+
+            // Render Phần I
+            const p1Total = examData.part1Total || 0;
+            const p1User = userAnswers.part1 || userAnswers;
+            const p1Correct = correctAnswers.part1 || correctAnswers;
+
+            if (p1Total > 0 && p1Correct) {
+                let p1Html = `<h3 class="part-title" style="margin: 20px 0 12px 0; color: #2563eb;">PHẦN I: Trắc nghiệm 4 lựa chọn</h3>`;
+                p1Html += `<div class="answers-grid">`;
+
+                for (let i = 1; i <= p1Total; i++) {
+                    const userChoice = p1User ? p1User[i] : undefined;
+                    const correctChoice = p1Correct[i];
+                    const isCorrect = (userChoice !== undefined && userChoice === correctChoice);
+
+                    p1Html += `
+                        <div class="answer-card ${isCorrect ? 'correct' : 'wrong'}">
+                            <div style="display: flex; justify-content: space-between; font-weight: 700; margin-bottom: 8px;">
+                                <span>Câu ${i}</span>
+                                <span style="color: ${isCorrect ? '#16a34a' : '#dc2626'};">${isCorrect ? '✓ Đúng' : '✗ Sai'}</span>
+                            </div>
+                            <div style="font-size: 13px; line-height: 1.6;">
+                                <div>Bạn chọn: <b style="color: ${isCorrect ? '#16a34a' : '#dc2626'};">${userChoice !== undefined ? letters[userChoice] : 'Chưa chọn'}</b></div>
+                                <div>Đáp án đúng: <b style="color: #16a34a;">${correctChoice !== undefined ? letters[correctChoice] : 'N/A'}</b></div>
+                            </div>
+                        </div>
+                    `;
+                }
+                p1Html += `</div>`;
+                container.innerHTML += p1Html;
+            }
+
+            // Render Phần II
+            const p2Total = examData.part2Total || 0;
+            const p2Correct = correctAnswers.part2;
+            const p2User = userAnswers.part2;
+
+            if (p2Total > 0 && p2Correct) {
+                let p2Html = `<h3 class="part-title" style="margin: 32px 0 12px 0; color: #2563eb;">PHẦN II: Trắc nghiệm Đúng / Sai</h3>`;
+                p2Html += `<div style="display: flex; flex-direction: column; gap: 16px;">`;
+
+                Object.keys(p2Correct).forEach(qNum => {
+                    const correctObj = p2Correct[qNum];
+                    const userObj = (p2User && p2User[qNum]) ? p2User[qNum] : {};
+
+                    p2Html += `
+                        <div class="answer-card-p2">
+                            <div style="font-weight: 700; font-size: 15px; margin-bottom: 12px; color: #0f172a;">Câu ${qNum}</div>
+                            <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+                                <thead>
+                                    <tr style="border-bottom: 2px solid #f1f5f9; text-align: left; color: #64748b;">
+                                        <th style="padding: 6px;">Ý</th>
+                                        <th style="padding: 6px;">Lựa chọn của bạn</th>
+                                        <th style="padding: 6px;">Đáp án đúng</th>
+                                        <th style="padding: 6px; text-align: center;">Kết quả</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                    `;
+
+                    ['a', 'b', 'c', 'd'].forEach(subKey => {
+                        const uVal = userObj[subKey];
+                        const cVal = correctObj[subKey];
+                        const isSubCorrect = (uVal !== undefined && uVal === cVal);
+
+                        const uText = uVal === true ? 'Đúng' : (uVal === false ? 'Sai' : 'Chưa chọn');
+                        const cText = cVal === true ? 'Đúng' : 'Sai';
+
+                        p2Html += `
+                            <tr style="border-bottom: 1px solid #f8fafc;">
+                                <td style="padding: 8px 6px; font-weight: 700;">${subKey})</td>
+                                <td style="padding: 8px 6px; color: ${isSubCorrect ? '#16a34a' : '#dc2626'}; font-weight: 600;">${uText}</td>
+                                <td style="padding: 8px 6px; color: #16a34a; font-weight: 600;">${cText}</td>
+                                <td style="padding: 8px 6px; text-align: center; font-weight: 700; color: ${isSubCorrect ? '#16a34a' : '#dc2626'};">
+                                    ${isSubCorrect ? '✓' : '✗'}
+                                </td>
+                            </tr>
+                        `;
+                    });
+
+                    p2Html += `
+                                </tbody>
+                            </table>
+                        </div>
+                    `;
+                });
+
+                p2Html += `</div>`;
+                container.innerHTML += p2Html;
+            }
+        }
+
+        // 2. RENDER DANH SÁCH FILE ĐÁP ÁN
+        function renderPresetFiles() {
+            const container = document.getElementById('presetFilesContainer');
+            if (!container) return;
+
+            if (ADMIN_ANSWER_FILES.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fa-solid fa-file-circle-xmark"></i><br>Chưa có file đáp án nào được đính kèm!
+                    </div>`;
+                return;
+            }
+
+            container.innerHTML = '';
+            ADMIN_ANSWER_FILES.forEach(file => {
+                container.innerHTML += `
+                    <div class="file-item">
+                        <div style="display: flex; align-items: center; gap: 16px;">
+                            <i class="fa-solid fa-file-pdf" style="font-size: 32px; color: #ef4444;"></i>
+                            <div>
+                                <div style="font-weight: 700; font-size: 15px; color: #0f172a;">${file.title}</div>
+                                <div style="font-size: 12px; color: #64748b; margin-top: 3px;">
+                                    ${file.note} | Dung lượng: <b>${file.fileSize}</b> | Cập nhật: ${file.updatedDate}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="file-actions">
+                            <a href="${file.fileUrl}" target="_blank" class="btn-view">
+                                <i class="fa-solid fa-eye"></i> Xem ngay
+                            </a>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // 3. RENDER BẢNG XẾP HẠNG THỰC TẾ
         function renderRealRank() {
             const tbody = document.getElementById('rankBody');
             tbody.innerHTML = '';
 
-            // Lấy danh sách toàn bộ các tài khoản đã làm bài thi được lưu thực tế
             const allUsersLeaderboard = JSON.parse(localStorage.getItem('allUsersLeaderboard') || '{}');
-            
-            // Tên tài khoản đang đăng nhập hiện tại
-            const currentAccountName = localStorage.getItem('currentUser') || 'Học sinh hiện tại';
+            const currentAccountName = localStorage.getItem('currentUser') || 'Nguyễn Bảo Ngọc';
 
-            // Chuyển object thành mảng danh sách người dùng thật
             let rankList = Object.keys(allUsersLeaderboard).map(username => {
                 const userHistory = allUsersLeaderboard[username] || [];
                 const totalExams = userHistory.length;
@@ -202,7 +438,6 @@
                 return;
             }
 
-            // Sắp xếp thứ tự Bảng xếp hạng thật: Điểm cao nhất -> Điểm trung bình -> Số bài đã làm
             rankList.sort((a, b) => {
                 if (b.maxScore !== a.maxScore) return b.maxScore - a.maxScore;
                 if (b.avgScore !== a.avgScore) return b.avgScore - a.avgScore;
@@ -224,15 +459,18 @@
                             ${user.isCurrent ? '<span style="font-size:10px; background:#2563eb; color:white; padding:2px 6px; border-radius:4px; margin-left:6px;">Tài khoản của bạn</span>' : ''}
                         </td>
                         <td><b>${user.totalExams}</b> bài</td>
-                        <td><b style="color:#16a34a;">${user.maxScore.toFixed(1)} đ</b></td>
-                        <td><b>${user.avgScore.toFixed(1)} đ</b></td>
+                        <td><b style="color:#16a34a;">${user.maxScore.toFixed(2)} đ</b></td>
+                        <td><b>${user.avgScore.toFixed(2)} đ</b></td>
                     </tr>
                 `;
             });
         }
 
-        renderAnswers();
-        renderRealRank();
+        document.addEventListener('DOMContentLoaded', () => {
+            renderAnswers();
+            renderPresetFiles();
+            renderRealRank();
+        });
     </script>
 </body>
 </html>
