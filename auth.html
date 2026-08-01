@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xác Thực Tài Khoản - Hệ Thống Ôn Thi THPT Quốc Gia</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: #f8fafc; color: #1e293b; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+
+        .auth-card {
+            background: #ffffff; border: 1px solid #e2e8f0; border-radius: 24px; padding: 35px 40px;
+            width: 100%; max-width: 450px; box-shadow: 0 20px 40px rgba(0,0,0,0.05); position: relative;
+        }
+        .brand-icon {
+            width: 55px; height: 55px; background: rgba(37,99,235,0.1); color: #2563eb;
+            border-radius: 16px; display: flex; align-items: center; justify-content: center;
+            font-size: 26px; margin: 0 auto 15px;
+        }
+        .auth-title { font-size: 22px; font-weight: 800; color: #0f172a; text-align: center; margin-bottom: 6px; }
+        .auth-desc { font-size: 13px; color: #64748b; text-align: center; margin-bottom: 24px; line-height: 1.5; }
+
+        /* Tab chuyển đổi */
+        .auth-tabs {
+            display: flex; background: #f1f5f9; border-radius: 12px; padding: 4px; margin-bottom: 24px;
+        }
+        .tab-btn {
+            flex: 1; text-align: center; padding: 10px; font-size: 14px; font-weight: 600; color: #64748b;
+            cursor: pointer; border-radius: 10px; transition: 0.2s; border: none; background: transparent;
+        }
+        .tab-btn.active { background: #ffffff; color: #2563eb; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+
+        .form-group { margin-bottom: 16px; }
+        .form-label { display: block; font-weight: 600; font-size: 13px; color: #334155; margin-bottom: 6px; }
+        .form-control {
+            width: 100%; padding: 12px 16px; border: 1px solid #cbd5e1; border-radius: 10px;
+            font-size: 14px; color: #0f172a; outline: none; transition: 0.2s; background: #fff;
+        }
+        .form-control:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+
+        .btn-action {
+            width: 100%; background: #2563eb; color: white; border: none; padding: 14px;
+            border-radius: 12px; font-weight: 700; font-size: 15px; cursor: pointer;
+            box-shadow: 0 4px 15px rgba(37,99,235,0.3); transition: 0.2s; margin-top: 10px;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .btn-action:hover { background: #1d4ed8; }
+
+        .form-container { display: none; }
+        .form-container.active { display: block; }
+
+        /* Giao diện thông báo tùy chỉnh trên UI (Toast) */
+        #custom-toast {
+            position: absolute; top: -60px; left: 50%; transform: translateX(-50%);
+            background: #0f172a; color: white; padding: 12px 20px; border-radius: 12px;
+            font-size: 13px; font-weight: 600; box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            display: flex; align-items: center; gap: 10px; opacity: 0; pointer-events: none; transition: 0.3s ease; z-index: 100;
+            white-space: nowrap;
+        }
+        #custom-toast.show { top: -50px; opacity: 1; pointer-events: auto; }
+        #custom-toast.success { background: #10b981; }
+        #custom-toast.error { background: #ef4444; }
+    </style>
+</head>
+<body>
+
+    <div class="auth-card">
+        <!-- Toast thông báo trên giao diện -->
+        <div id="custom-toast"><i id="toast-icon" class="fa-solid fa-circle-check"></i> <span id="toast-msg">Thông báo</span></div>
+
+        <div class="brand-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+        <div class="auth-title">Hệ Thống Ôn Thi THPT Quốc Gia</div>
+        <div class="auth-desc" id="authDesc">Đăng nhập hoặc tạo tài khoản mới để tiếp tục hành trình ôn tập.</div>
+        
+        <!-- Các nút Tab chuyển đổi -->
+        <div class="auth-tabs">
+            <button class="tab-btn active" onclick="switchTab('login')" id="loginTabBtn">Đăng Nhập</button>
+            <button class="tab-btn" onclick="switchTab('register')" id="regTabBtn">Đăng Ký</button>
+        </div>
+
+        <!-- Form Đăng Nhập -->
+        <div id="loginFormContainer" class="form-container active">
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label class="form-label">Tên đăng nhập hoặc Email</label>
+                    <input type="text" id="loginIdentifier" class="form-control" placeholder="Nhập tên đăng nhập..." required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Mật khẩu</label>
+                    <input type="password" id="loginPassword" class="form-control" placeholder="Nhập mật khẩu..." required>
+                </div>
+
+                <button type="submit" class="btn-action">
+                    <i class="fa-solid fa-right-to-bracket"></i> Đăng Nhập
+                </button>
+            </form>
+        </div>
+
+        <!-- Form Đăng Ký -->
+        <div id="registerFormContainer" class="form-container">
+            <form onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label class="form-label">Tên đăng nhập</label>
+                    <input type="text" id="regUserName" class="form-control" placeholder="Ví dụ: baongoc27" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Họ và tên</label>
+                    <input type="text" id="regFullName" class="form-control" placeholder="Ví dụ: Nguyễn Bảo Ngọc" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" id="regEmail" class="form-control" placeholder="Ví dụ: email@gmail.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Mật khẩu</label>
+                    <input type="password" id="regPassword" class="form-control" placeholder="Ít nhất 6 ký tự" required>
+                </div>
+
+                <button type="submit" class="btn-action">
+                    <i class="fa-solid fa-user-plus"></i> Tạo Tài Khoản
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Hàm hiển thị thông báo đẹp mắt trên giao diện thay cho alert()
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('custom-toast');
+            const msgSpan = document.getElementById('toast-msg');
+            const icon = document.getElementById('toast-icon');
+
+            toast.className = `show ${type}`;
+            msgSpan.innerText = message;
+            icon.className = type === 'success' ? 'fa-solid fa-circle-check' : 'fa-solid fa-circle-exclamation';
+
+            setTimeout(() => {
+                toast.className = '';
+            }, 3000);
+        }
+
+        function switchTab(tab) {
+            const loginTab = document.getElementById('loginTabBtn');
+            const regTab = document.getElementById('regTabBtn');
+            const loginForm = document.getElementById('loginFormContainer');
+            const regForm = document.getElementById('registerFormContainer');
+            const desc = document.getElementById('authDesc');
+
+            if (tab === 'login') {
+                loginTab.classList.add('active');
+                regTab.classList.remove('active');
+                loginForm.classList.add('active');
+                regForm.classList.remove('active');
+                desc.innerText = "Đăng nhập để tiếp tục ôn tập và luyện đề THPT Quốc gia.";
+            } else {
+                regTab.classList.add('active');
+                loginTab.classList.remove('active');
+                regForm.classList.add('active');
+                loginForm.classList.remove('active');
+                desc.innerText = "Tạo tài khoản mới để bắt đầu hành trình ôn thi thông minh.";
+            }
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const identifier = document.getElementById('loginIdentifier').value.trim();
+            const password = document.getElementById('loginPassword').value;
+
+            const savedUserName = localStorage.getItem('userName');
+            const savedEmail = localStorage.getItem('userEmail');
+            const savedPassword = localStorage.getItem('userPassword');
+
+            if (!savedUserName && !savedEmail) {
+                localStorage.setItem('userName', identifier);
+                localStorage.setItem('userFullName', identifier);
+                localStorage.setItem('userEmail', identifier.includes('@') ? identifier : identifier + '@gmail.com');
+                localStorage.setItem('userPassword', password);
+                
+                showToast("Đăng nhập thành công!", "success");
+                setTimeout(() => window.location.href = 'home.html', 1000);
+                return;
+            }
+
+            const isMatch = (identifier === savedUserName || identifier === savedEmail);
+            if (isMatch && (!savedPassword || password === savedPassword)) {
+                showToast("Đăng nhập thành công!", "success");
+                setTimeout(() => window.location.href = 'home.html', 1000);
+            } else {
+                showToast("Tên đăng nhập hoặc mật khẩu không chính xác!", "error");
+            }
+        }
+
+        // Đăng ký thành công sẽ lưu thông tin, báo thành công và chuyển sang tab Đăng nhập
+        function handleRegister(e) {
+            e.preventDefault();
+            
+            const userName = document.getElementById('regUserName').value.trim();
+            const userFullName = document.getElementById('regFullName').value.trim();
+            const userEmail = document.getElementById('regEmail').value.trim();
+            const password = document.getElementById('regPassword').value;
+
+            if (password.length < 6) {
+                showToast("Mật khẩu phải có ít nhất 6 ký tự!", "error");
+                return;
+            }
+
+            localStorage.setItem('userName', userName);
+            localStorage.setItem('userFullName', userFullName);
+            localStorage.setItem('userEmail', userEmail);
+            localStorage.setItem('userPassword', password);
+
+            showToast("Đăng ký thành công! Vui lòng đăng nhập.", "success");
+            
+            // Xóa form đăng ký và tự động chuyển về tab Đăng nhập sau 1.2 giây
+            document.getElementById('registerFormContainer').querySelector('form').reset();
+            setTimeout(() => {
+                switchTab('login');
+                document.getElementById('loginIdentifier').value = userName;
+            }, 1200);
+        }
+    </script>
+</body>
+</html>
